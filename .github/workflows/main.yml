@@ -4,6 +4,7 @@ on:  [push]
 
 jobs:
   build:
+    name: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,14 +20,20 @@ jobs:
         run: make lint
       - name: Run tests
         run: make test
-      - name: Test
-        run: make coverage
-      - name: Report
+  coverage:
+    needs: [ build ]
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install poetry
         run: |
-          export GIT_BRANCH="${GITHUB_REF/refs\/heads\//}"
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-          ./cc-test-reporter format-coverage -t lcov coverage/lcov.info
-          ./cc-test-reporter upload-coverage
+          pip install poetry
+          make install
+      - uses: paambaati/codeclimate-action@v2.7.4
         env:
-          CC_TEST_REPORTER_ID: f454552ee7437b3bcb435cd50272ebfb68fa2ebc52501833079921268e1cfd74
+          CC_TEST_REPORTER_ID: 945dfb58a832d233a3caeb84e3e6d3be212e8c7abcb48117fce63b9adcb43647
+        with:
+          coverageCommand: make coverage
