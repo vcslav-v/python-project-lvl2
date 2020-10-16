@@ -1,53 +1,12 @@
 """Tests for differences_evaluator"""
-from json import JSONDecodeError
+import json
+import os
 
 import pytest
 
 from differences_evaluator import evaluator
 
-
-@pytest.fixture
-def first_json(tmp_path):
-    content = """{
-        "host": "hexlet.io",
-        "timeout": 50,
-        "proxy": "123.234.53.22",
-        "follow": false
-    }
-    """
-    json_file = tmp_path / 'first.json'
-    json_file.write_text(content)
-    return json_file
-
-
-@pytest.fixture
-def second_json(tmp_path):
-    content = """{
-        "timeout": 20,
-        "verbose": true,
-        "host": "hexlet.io"
-    }
-    """
-    json_file = tmp_path / 'second.json'
-    json_file.write_text(content)
-    return json_file
-
-
-@pytest.fixture
-def wrong_json(tmp_path):
-    content = """{
-        "timeout: 20
-    }
-    """
-    json_file = tmp_path / 'wrong.json'
-    json_file.write_text(content)
-    return json_file
-
-
-@pytest.fixture
-def fake_json(tmp_path):
-    json_file = tmp_path / 'fake.json'
-    return json_file
+from tests.fixtures.jsons import first_json, second_json, wrong_json, fake_json
 
 
 def test_format_generate_diff(first_json, second_json):
@@ -56,14 +15,11 @@ def test_format_generate_diff(first_json, second_json):
 
 
 def test_values_generate_diff(first_json, second_json):
-    expect = {
-        '- follow: False',
-        'host: hexlet.io',
-        '- proxy: 123.234.53.22',
-        '- timeout: 50',
-        '+ timeout: 20',
-        '+ verbose: True',
-    }
+    with open(
+        os.path.join('tests', 'fixtures', 'expect.json'), 'r'
+    ) as expects:
+        expects_json = json.load(expects)
+    expect = set(expects_json['test_values_generate_diff'])
     result = evaluator.generate_diff(first_json, second_json)
     result = result.split('\n')
     result = list(map(lambda line: line.strip(), result))
@@ -72,7 +28,7 @@ def test_values_generate_diff(first_json, second_json):
 
 
 def test_wrong_json_exceptions_json_generate_diff(first_json, wrong_json):
-    with pytest.raises(JSONDecodeError):
+    with pytest.raises(json.JSONDecodeError):
         evaluator.generate_diff(first_json, wrong_json)
 
 
