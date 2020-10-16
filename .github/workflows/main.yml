@@ -23,4 +23,4 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: f454552ee7437b3bcb435cd50272ebfb68fa2ebc52501833079921268e1cfd74
         with:
-          coverageCommand:  make coverage
+          coverageCommand:  poetry run pytest --cov=differences_evaluator --cov-report xml tests/
