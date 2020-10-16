@@ -8,5 +8,4 @@ test:
 	poetry run pytest tests/differences_evaluator.py
 
 coverage:
-	poetry run coverage run -m pytest tests/differences_evaluator.py
-	poetry run coverage xml
+	poetry run pytest --cov=differences_evaluator --cov-report xml tests/
