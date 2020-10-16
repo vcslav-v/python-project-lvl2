@@ -3,7 +3,7 @@
 
 import argparse
 
-from DifferencesEvaluator import evaluator
+from differences_evaluator import evaluator
 
 parser = argparse.ArgumentParser(description='Generate diff')
 
