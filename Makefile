@@ -9,3 +9,4 @@ test:
 
 coverage:
 	poetry run coverage run -m pytest tests/differences_evaluator.py
+	poetry run coverage xml
