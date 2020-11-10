@@ -6,6 +6,7 @@ authors = ["vcslav-v <vcslav.v@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+PyYAML = "^5.3.1"
 
 [tool.poetry.scripts]
 gendiff = "differences_evaluator.scripts.gendiff:main"
