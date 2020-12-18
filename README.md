@@ -7,4 +7,4 @@
 [![How to use](https://asciinema.org/a/sCwb2nwZVS1L9r8ZyrkjbcxMu.svg)](https://asciinema.org/a/sCwb2nwZVS1L9r8ZyrkjbcxMu?autoplay=1)
 
 ### YAML
-![How to use](https://asciinema.org/a/11uxO6vWypUr5M20m9yaLw5m3.svg)](https://asciinema.org/a/11uxO6vWypUr5M20m9yaLw5m3?autoplay=1)
+[![How to use](https://asciinema.org/a/11uxO6vWypUr5M20m9yaLw5m3.svg)](https://asciinema.org/a/11uxO6vWypUr5M20m9yaLw5m3?autoplay=1)
