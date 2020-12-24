@@ -4,10 +4,10 @@ import pytest
 
 @pytest.fixture
 def first_yaml(tmp_path):
-    content = """host: hexlet.io
-timeout: 50
-proxy: 123.234.53.22
-follow: false
+    content = """test: some_string
+num: 43
+ip_address: 192.168.1.1
+boolean: false
     """
     yaml_file = tmp_path / 'first.yaml'
     yaml_file.write_text(content)
@@ -16,8 +16,8 @@ follow: false
 
 @pytest.fixture
 def second_yaml(tmp_path):
-    content = """timeout: 20
-verbose: true
+    content = """ip_address: 255.255.1.1
+boolean: false
 host: hexlet.io
     """
     yaml_file = tmp_path / 'second.yaml'

@@ -10,49 +10,47 @@ from tests.fixtures.jsons import first_json, wrong_json, fake_json
 from tests.fixtures.yamls import first_yaml, wrong_yaml, fake_yaml
 
 with open(
-    os.path.join('tests', 'fixtures', 'expect.json'), 'r'
-) as expects:
-    expects = json.load(expects)
+    os.path.join('tests', 'fixtures', 'file_parser_content.json'), 'r'
+) as test_content_file:
+    test_content = json.load(test_content_file)
 
 
 def test_get_extension_simple_file():
     result = file_parser.get_extension(
-        'file_name.json'
+        *test_content['test_get_extension_simple_file']['args']
     )
-    assert (result == 'json')
+    expect = test_content['test_get_extension_simple_file']['expect']
+    assert (result == expect)
 
 
 def test_get_extension_unix_file_path():
     result = file_parser.get_extension(
-        '/Users/user/Downloads/file_name.yaml'
+        *test_content['test_get_extension_unix_file_path']['args']
     )
-    assert (result == 'yaml')
+    expect = test_content['test_get_extension_unix_file_path']['expect']
+    assert (result == expect)
 
 
 def test_get_extension_win_file_path():
     result = file_parser.get_extension(
-        r'C:\\Downloads\file_name.png'
+        *test_content['test_get_extension_win_file_path']['args']
     )
-    assert (result == 'png')
+    expect = test_content['test_get_extension_win_file_path']['expect']
+    assert (result == expect)
 
 
 def test_get_extension_many_dots():
     result = file_parser.get_extension(
-        'file.name.exe'
+        *test_content['test_get_extension_many_dots']['args']
     )
-    assert (result == 'exe')
-
-
-def test_get_data_many_dots():
-    result = file_parser.get_extension(
-        'file.name.exe'
-    )
-    assert (result == 'exe')
+    expect = test_content['test_get_extension_many_dots']['expect']
+    assert (result == expect)
 
 
 def test_get_data_json(first_json):
     result = file_parser.get_data(first_json)
-    assert (result == expects['test_get_data_json'])
+    expect = test_content['test_get_data_json']['expect']
+    assert (result == expect)
 
 
 def test_get_data_json_wrong_json(wrong_json):
@@ -67,7 +65,8 @@ def test_get_data_json_fake_json(fake_json):
 
 def test_get_data_yaml(first_yaml):
     result = file_parser.get_data(first_yaml)
-    assert (result == expects['test_get_data_json'])
+    expect = test_content['test_get_data_yaml']['expect']
+    assert (result == expect)
 
 
 def test_get_data_json_wrong_yaml(wrong_yaml):

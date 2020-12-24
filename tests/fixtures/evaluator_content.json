@@ -1,0 +1,67 @@
+{
+    "test_get_diff_string": 
+    {
+        "args": 
+        [
+            {
+                "host": "hexlet.io",
+                "timeout": 50,
+                "proxy": "123.234.53.22",
+                "follow": false
+            },
+            {
+                "timeout": 20,
+                "verbose": true,
+                "host": "hexlet.io"
+            }
+        ],
+        "expect":
+            [
+                "- follow: False",
+                "host: hexlet.io",
+                "- proxy: 123.234.53.22",
+                "- timeout: 50",
+                "+ timeout: 20",
+                "+ verbose: True"
+            ]
+    },
+    "test_get_diff_string_empty_dicts":
+    {
+        "args":
+        [
+            {},
+            {}
+        ],
+        "expect": "{\n}"
+    },
+    "test_get_diff_string_wrong_attr":
+    {
+        "args":
+        [0,[0]]
+    },
+    "test_generate_diff_json":
+    {
+        "expect":
+        [
+            "- follow: False",
+            "host: hexlet.io",
+            "- proxy: 123.234.53.22",
+            "- timeout: 50",
+            "+ timeout: 20",
+            "+ verbose: True"
+        ]
+    },
+    "test_generate_diff_yaml":
+    {
+        "expect":
+        [
+            "- test: some_string",
+            "- ip_address: 192.168.1.1",
+            "+ ip_address: 255.255.1.1",
+            "- test: some_string",
+            "+ host: hexlet.io",
+            "- num: 43",
+            "boolean: False"
+        ]
+    }
+}

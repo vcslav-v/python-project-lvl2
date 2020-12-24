@@ -1,0 +1,43 @@
+{
+    "test_get_extension_simple_file": 
+    {
+        "args": ["file_name.json"],
+        "expect": "json"
+    },
+    "test_get_extension_unix_file_path":
+    {
+        "args": ["/Users/user/Downloads/file_name.yaml"],
+        "expect": "yaml"
+    },
+    "test_get_extension_win_file_path":
+    {
+        "args": ["C:\\\\Downloads\\file_name.png"],
+        "expect": "png"
+    },
+    "test_get_extension_many_dots":
+    {
+        "args": ["file.name.exe"],
+        "expect": "exe"
+    },
+    "test_get_data_json":
+    {
+        "expect":
+        {
+            "host": "hexlet.io",
+            "timeout": 50,
+            "proxy": "123.234.53.22",
+            "follow": false
+        }
+    },
+    "test_get_data_yaml":
+    {
+        "expect":
+        {
+            "test": "some_string",
+            "num": 43,
+            "ip_address": "192.168.1.1",
+            "boolean": false
+        }
+    }
+}
+

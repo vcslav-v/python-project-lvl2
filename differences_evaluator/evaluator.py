@@ -12,8 +12,7 @@ def print_diff(
 
 def generate_diff(
     first_file_path: str,
-    second_file_path: str,
-    format_output_file: str = None,
+    second_file_path: str
 ) -> str:
     """Generate diffirences of two files.
 
@@ -51,9 +50,9 @@ def get_diff_string(first_data: dict, second_data: dict) -> str:
         first_value = first_data.get(key)
         second_value = second_data.get(key)
         pattern = ' {key}: {value}\n'
-        if not second_value:
+        if second_value is None:
             result += '  -' + pattern.format(key=key, value=first_value)
-        elif not first_value:
+        elif first_value is None:
             result += '  +' + pattern.format(key=key, value=second_value)
         elif first_value == second_value:
             result += '   ' + pattern.format(key=key, value=first_value)

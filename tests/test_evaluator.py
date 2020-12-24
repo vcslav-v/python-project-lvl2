@@ -10,26 +10,16 @@ from tests.fixtures.jsons import fake_json, first_json, second_json, wrong_json
 from tests.fixtures.yamls import fake_yaml, first_yaml, second_yaml, wrong_yaml
 
 with open(
-    os.path.join('tests', 'fixtures', 'expect.json'), 'r'
-) as expects:
-    expects = json.load(expects)
+    os.path.join('tests', 'fixtures', 'evaluator_content.json'), 'r'
+) as test_content_file:
+    test_content = json.load(test_content_file)
 
 
 def test_get_diff_string():
     result = evaluator.get_diff_string(
-        {
-            'host': 'hexlet.io',
-            'timeout': 50,
-            'proxy': '123.234.53.22',
-            'follow': False
-        },
-        {
-            'timeout': 20,
-            'verbose': True,
-            'host': 'hexlet.io'
-        }
+        *test_content['test_get_diff_string']['args']
     )
-    expect = set(expects['test_values_generate_diff'])
+    expect = set(test_content['test_get_diff_string']['expect'])
     result = result.split('\n')
     result = list(map(lambda line: line.strip(), result))
     assert result[0] == '{'
@@ -39,17 +29,21 @@ def test_get_diff_string():
 
 
 def test_get_diff_string_empty_dicts():
-    result = evaluator.get_diff_string({}, {})
-    assert result == '{\n}'
+    result = evaluator.get_diff_string(
+        *test_content['test_get_diff_string_empty_dicts']['args']
+    )
+    assert result == test_content['test_get_diff_string_empty_dicts']['expect']
 
 
 def test_get_diff_string_wrong_attr():
     with pytest.raises(AttributeError):
-        evaluator.get_diff_string(0, [0])
+        evaluator.get_diff_string(
+            *test_content['test_get_diff_string_wrong_attr']['args']
+        )
 
 
 def test_generate_diff_json(first_json, second_json):
-    expect = set(expects['test_values_generate_diff'])
+    expect = set(test_content['test_generate_diff_json']['expect'])
     result = evaluator.generate_diff(first_json, second_json)
     result = result.split('\n')
     result = list(map(lambda line: line.strip(), result))
@@ -60,7 +54,7 @@ def test_generate_diff_json(first_json, second_json):
 
 
 def test_generate_diff_yaml(first_yaml, second_yaml):
-    expect = set(expects['test_values_generate_diff'])
+    expect = set(test_content['test_generate_diff_yaml']['expect'])
     result = evaluator.generate_diff(first_yaml, second_yaml)
     result = result.split('\n')
     result = list(map(lambda line: line.strip(), result))
