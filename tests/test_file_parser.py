@@ -6,8 +6,8 @@ import os
 import pytest
 
 from differences_evaluator import file_parser
-from tests.fixtures.jsons import first_json, wrong_json, fake_json
-from tests.fixtures.yamls import first_yaml, wrong_yaml, fake_yaml
+from tests.fixtures.jsons import flat_first_json, wrong_json, fake_json
+from tests.fixtures.yamls import flat_first_yaml, wrong_yaml, fake_yaml
 
 with open(
     os.path.join('tests', 'fixtures', 'file_parser_content.json'), 'r'
@@ -47,8 +47,8 @@ def test_get_extension_many_dots():
     assert (result == expect)
 
 
-def test_get_data_json(first_json):
-    result = file_parser.get_data(first_json)
+def test_get_data_json(flat_first_json):
+    result = file_parser.get_data(flat_first_json)
     expect = test_content['test_get_data_json']['expect']
     assert (result == expect)
 
@@ -63,8 +63,8 @@ def test_get_data_json_fake_json(fake_json):
         file_parser.get_data(fake_json)
 
 
-def test_get_data_yaml(first_yaml):
-    result = file_parser.get_data(first_yaml)
+def test_get_data_yaml(flat_first_yaml):
+    result = file_parser.get_data(flat_first_yaml)
     expect = test_content['test_get_data_yaml']['expect']
     assert (result == expect)
 
@@ -77,3 +77,11 @@ def test_get_data_json_wrong_yaml(wrong_yaml):
 def test_get_data_json_fake_yaml(fake_yaml):
     with pytest.raises(FileNotFoundError):
         file_parser.get_data(fake_yaml)
+
+
+def test_get_repr():
+    result = file_parser.get_repr(
+        *test_content['test_get_repr']['args']
+    )
+    expect = test_content['test_get_repr']['expect']
+    assert (result == expect)
