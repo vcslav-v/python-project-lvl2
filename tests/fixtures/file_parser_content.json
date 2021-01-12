@@ -54,51 +54,30 @@
                     }
                   }
                 },
-                "group1": {
-                  "baz": "bas",
-                  "foo": "bar",
-                  "nest": {
-                    "key": "value"
-                  }
-                },
-                "group2": {
-                  "abc": 12345,
-                  "deep": {
-                    "id": 45
-                  }
-                }
-              }
+                "group1": "test"
+            }
         ],
         "expect":
-            {"node": null, "leafs": null, "children":[
+            {"node": "root", "leafs": [
+                {"key":"group1", "value": "test", "path":["root"]}
+            ], "children":[
                 {"node":"common", "leafs": [
-                    {"key":"setting1", "value": "Value 1"},
-                    {"key":"setting2", "value": 200},
-                    {"key":"setting3", "value": true}
-                ], "children":[
-                    {"node":"setting6", "leafs": [
-                        {"key":"key", "value": "value"}
+                        {"key":"setting1", "value": "Value 1", "path":["root", "common"]},
+                        {"key":"setting2", "value": 200, "path":["root", "common"]},
+                        {"key":"setting3", "value": true, "path":["root", "common"]}
                     ], "children":[
-                        {"node":"doge", "leafs": [
-                            {"key":"wow", "value": ""}
-                        ], "children": null}
-                    ]}
-                ]},
-                {"node":"group1", "leafs": [
-                    {"key":"baz", "value": "bas"},
-                    {"key":"foo", "value": "bar"}
-                ], "children":[
-                    {"node":"nest", "leafs": [
-                        {"key":"key", "value": "value"}
-                    ], "children":null}
-                ]},
-                {"node":"group2", "leafs":[
-                    {"key":"abc", "value": 12345}
-                ], "children":[
-                    {"node":"deep", "leafs": [
-                        {"key":"id", "value": 45}
-                    ]}
-                ]}     
-            ]}
+                        {"node":"setting6", "leafs": [
+                            {"key":"key", "value": "value", "path":["root", "common", "setting6"]}
+                        ], "children":[
+                            {"node":"doge", "leafs": [
+                                {"key":"wow", "value": "", "path":["root", "common", "setting6", "doge"]}
+                            ], "children": [], "path":["root","common","setting6"]
+                            }
+                        ], "path":["root","common"]
+                        }
+                    ], "path":["root"]
+                }
+                ], "path":[]
+            }
     }
 }
