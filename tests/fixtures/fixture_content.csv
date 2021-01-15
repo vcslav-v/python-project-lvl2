@@ -24,18 +24,7 @@ tree_first_json,"{
       }
     }
   },
-  ""group1"": {
-    ""baz"": ""bas"",
-    ""foo"": ""bar"",
-    ""nest"": {
-      ""key"": ""value""
-    }
-  },
-  ""group2"": {
-    ""abc"": 12345,
-    ""deep"": {
-      ""id"": 45
-    }
+  ""key"": ""value""
   }
 }
 "
@@ -56,18 +45,8 @@ tree_second_json,"{
       }
     }
   },
-  ""group1"": {
-    ""foo"": ""bar"",
-    ""baz"": ""bars"",
-    ""nest"": ""str""
-  },
-  ""group3"": {
-    ""fee"": 100500,
-    ""deep"": {
-      ""id"": {
-        ""number"": 45
-      }
-    }
+  ""key"": {
+    ""foo"": ""bar""
   }
 }"
 flat_first_yaml,"test: some_string
@@ -88,15 +67,7 @@ tree_first_yaml,"common:
     key: value
     doge:
       wow:
-group1:
-  baz: bas
-  foo: bar
-  nest:
-    key:
-group2:
-  abc: 12345
-  deep:
-    id:
+key: value
 "
 tree_second_yaml,"common: 
   follow: false
@@ -110,12 +81,5 @@ tree_second_yaml,"common:
     ops: vops
     doge: 
       wow: so much
-group1: 
-  foo: bar
-  baz: bars
-  nest: str
-group3: 
-  fee: 100500
-  deep: 
-    id: 
-      number: 45"
+key: 
+  foo: bar"

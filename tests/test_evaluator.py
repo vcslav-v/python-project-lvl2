@@ -17,11 +17,11 @@ with open(
     test_content = json.load(test_content_file)
 
 
-def test_get_diff_string():
-    result = evaluator.get_diff_string(
-        *test_content['test_get_diff_string']['args']
+def test_stylish():
+    result = evaluator.stylish(
+        *test_content['test_stylish']['args']
     )
-    expect = set(test_content['test_get_diff_string']['expect'])
+    expect = set(test_content['test_stylish']['expect'])
     result = result.split('\n')
     result = list(map(lambda line: line.strip(), result))
     assert result[0] == '{'
@@ -30,40 +30,60 @@ def test_get_diff_string():
     assert result == expect
 
 
-def test_get_diff_string_empty_dicts():
-    result = evaluator.get_diff_string(
-        *test_content['test_get_diff_string_empty_dicts']['args']
+def test_stylish_empty_diff():
+    result = evaluator.stylish(
+        *test_content['test_stylish_empty_diff']['args']
     )
-    assert result == test_content['test_get_diff_string_empty_dicts']['expect']
+    assert result == test_content['test_stylish_empty_diff']['expect']
 
 
-def test_get_diff_string_wrong_attr():
+def test_stylish_wrong_attr():
     with pytest.raises(AttributeError):
-        evaluator.get_diff_string(
-            *test_content['test_get_diff_string_wrong_attr']['args']
+        evaluator.stylish(
+            *test_content['test_stylish_wrong_attr']['args']
         )
 
 
-def test_generate_diff_json(flat_first_json, flat_second_json):
-    expect = set(test_content['test_generate_diff_json']['expect'])
+def test_get_diff():
+    result = evaluator.get_diff(
+        *test_content['test_get_diff']['args']
+    )
+    assert result == test_content['test_get_diff']['expect']
+
+
+def test_get_diff_wrong_args():
+    pass
+
+
+def test_get_diff_wrong_format_args():
+    pass
+
+
+def test_get_diff_empty():
+    result = evaluator.get_diff(
+        *test_content['test_get_diff_empty']['args']
+    )
+    assert result == test_content['test_get_diff_empty']['expect']
+
+
+def test_generate_diff_flat_json(flat_first_json, flat_second_json):
     result = evaluator.generate_diff(flat_first_json, flat_second_json)
-    result = result.split('\n')
-    result = list(map(lambda line: line.strip(), result))
-    assert result[0] == '{'
-    assert result[-1] == '}'
-    result = set(result[1:-1])
-    assert result == expect
+    assert result == test_content['test_generate_diff_flat_json']['expect']
 
 
-def test_generate_diff_yaml(flat_first_yaml, flat_second_yaml):
-    expect = set(test_content['test_generate_diff_yaml']['expect'])
+def test_generate_diff_flat_yaml(flat_first_yaml, flat_second_yaml):
     result = evaluator.generate_diff(flat_first_yaml, flat_second_yaml)
-    result = result.split('\n')
-    result = list(map(lambda line: line.strip(), result))
-    assert result[0] == '{'
-    assert result[-1] == '}'
-    result = set(result[1:-1])
-    assert result == expect
+    assert result == test_content['test_generate_diff_flat_yaml']['expect']
+
+
+def test_generate_diff_tree_json(tree_first_json, tree_second_json):
+    result = evaluator.generate_diff(tree_first_json, tree_second_json)
+    assert result == test_content['test_generate_diff_tree_json']['expect']
+
+
+def test_generate_diff_tree_yaml(tree_first_yaml, tree_second_yaml):
+    result = evaluator.generate_diff(tree_first_yaml, tree_second_yaml)
+    assert result == test_content['test_generate_diff_tree_yaml']['expect']
 
 
 def test_generate_diff_wrong_yaml(flat_first_yaml, wrong_yaml):

@@ -1,67 +1,300 @@
 {
-    "test_get_diff_string": 
+    "test_stylish": 
     {
         "args": 
         [
-            {
-                "host": "hexlet.io",
-                "timeout": 50,
-                "proxy": "123.234.53.22",
-                "follow": false
-            },
-            {
-                "timeout": 20,
-                "verbose": true,
-                "host": "hexlet.io"
-            }
+            {"node": "root",
+                "leafs": [
+                    {"key": "group1", "value": 888, "parrent": ["root"], "diff": "add"}
+                ],
+                "children": [{"node": "common",
+                    "leafs": [{"key": "setting1",
+                        "value": "Value 1",
+                        "parrent": ["root", "common"], "diff": "no change"},
+                    {"key": "setting2", "value": 200, "parrent": ["root", "common"], "diff": "no change"},
+                    {"key": "setting3", "value": true, "parrent": ["root", "common"], "diff": "remove"},
+                    {"key": "setting3", "value": false, "parrent": ["root", "common"], "diff": "add"}],
+                    "children": [{"node": "setting6",
+                        "leafs": [{"key": "key",
+                        "value": "value",
+                        "parrent": ["root", "common", "setting6"], "diff": "no change"}],
+                        "children": [{"node": "doge",
+                        "leafs": [{"key": "wow",
+                            "value": "",
+                            "parrent": ["root", "common", "setting6", "doge"], "diff": "remove"},
+                            {"key": "wow1",
+                                "value": "",
+                                "parrent": ["root", "common", "setting6", "doge"], "diff": "add"}],
+                        "children": [],
+                        "path": ["root", "common", "setting6"], "diff": "no change"}],
+                        "path": ["root", "common"], "diff": "no change"}],
+                    "path": ["root"], "diff": "no change"},
+                    {"node": "group1",
+                        "leafs": [{"key": "test", "value": "test", "parrent": ["root", "group1"]}],
+                        "children": [],
+                        "path": ["root"], "diff": "remove"}
+                    ],
+                "path": [], "parrent": [], "diff": "no change"}
         ],
         "expect":
             [
-                "- follow: False",
-                "host: hexlet.io",
-                "- proxy: 123.234.53.22",
-                "- timeout: 50",
-                "+ timeout: 20",
-                "+ verbose: True"
+                "+ group1: 888",
+                "common: {",
+                "setting1: Value 1",
+                "setting2: 200",
+                "- setting3: True",
+                "+ setting3: False",
+                "setting6: {",
+                "key: value",
+                "doge: {",
+                "- wow:",
+                "+ wow1:",
+                "}",
+                "}",
+                "}",
+                "+ group1: {",
+                "test: test"
             ]
     },
-    "test_get_diff_string_empty_dicts":
+    "test_stylish_empty_diff":
     {
         "args":
         [
-            {},
-            {}
+            {"node": "root", "leafs": [], "children": [], "path": [], "diff": "no change"}
         ],
         "expect": "{\n}"
     },
-    "test_get_diff_string_wrong_attr":
+    "test_stylish_wrong_attr":
     {
         "args":
-        [0,[0]]
-    },
-    "test_generate_diff_json":
-    {
-        "expect":
         [
-            "- follow: False",
-            "host: hexlet.io",
-            "- proxy: 123.234.53.22",
-            "- timeout: 50",
-            "+ timeout: 20",
-            "+ verbose: True"
+            {"node": "root", "leafs": 0, "children": [], "path": []},
+            {"node": "rot", "leafs": [], "children": [], "path": []}
         ]
     },
-    "test_generate_diff_yaml":
+    "test_generate_diff_flat_json":
     {
-        "expect":
-        [
-            "- test: some_string",
-            "- ip_address: 192.168.1.1",
-            "+ ip_address: 255.255.1.1",
-            "- test: some_string",
-            "+ host: hexlet.io",
-            "- num: 43",
-            "boolean: False"
+        "expect": {
+            "node":"root", "leafs": [
+                {"key": "host", "value": "hexlet.io", "path": ["root"], "diff": "no change"},
+                {"key": "timeout", "value": 50, "path": ["root"], "diff": "remove"},
+                {"key": "timeout", "value": 20, "path": ["root"], "diff": "add"},
+                {"key": "proxy", "value": "123.234.53.22", "path": ["root"], "diff": "remove"},
+                {"key": "follow", "value": false, "path": ["root"], "diff": "remove"},
+                {"key": "verbose", "value": true, "path": ["root"], "diff": "add"}
+            ], "children": [], "path": [], "diff": "no change"}
+    },
+    "test_generate_diff_flat_yaml":
+    {
+        "expect": {
+            "node":"root", "leafs": [
+                {"key": "test", "value": "some_string", "path": ["root"], "diff": "remove"},
+                {"key": "num", "value": 43, "path": ["root"], "diff": "remove"},
+                {"key": "ip_address", "value": "192.168.1.1", "path": ["root"], "diff": "remove"},
+                {"key": "ip_address", "value": "255.255.1.1", "path": ["root"], "diff": "add"},
+                {"key": "boolean", "value": false, "path": ["root"], "diff": "no change"},
+                {"key": "host", "value": "hexlet.io", "path": ["root"], "diff": "add"}
+            ], "children": [], "path": [], "diff": "no change"}
+    },
+    "test_generate_diff_tree_json":
+    {
+        "expect": {
+            "node":"root", "leafs": [
+                {"key": "key", "value": "value", "path": ["root"], "diff": "remove"}
+            ], "children": [
+                {"node":"common", "leafs": [
+                    {"key": "setting1", "value": "Value 1", "path": ["root", "common"], "diff": "no change"},
+                    {"key": "setting2", "value": 200, "path": ["root", "common"], "diff": "remove"},
+                    {"key": "setting3", "value": true, "path": ["root", "common"], "diff": "remove"},
+                    {"key": "setting3", "value": null, "path": ["root", "common"], "diff": "add"},
+                    {"key": "setting4", "value": "blah blah", "path": ["root", "common"], "diff": "add"},
+                    {"key": "follow", "value": false, "path": ["root", "common"], "diff": "add"}
+                ], "children": [
+                    {"node": "setting6", "leafs":[
+                        {"key": "key", "value": "value", "path": ["root", "common", "setting6"], "diff": "no change"},
+                        {"key": "ops", "value": "vops", "path": ["root", "common", "setting6"], "diff": "add"}
+                    ], "children":[
+                        {"node":"doge", "leafs": [
+                            {"key": "wow", "value": "", "path": ["root", "common", "setting6", "doge"], "diff": "remove"},
+                            {"key": "wow", "value": "so much", "path": ["root", "common", "setting6", "doge"], "diff": "add"}
+                        ], "children": [], "path": ["root", "common", "setting6"], "diff": "no change"}
+                    ], "path": ["root", "common"], "diff": "no change"},
+                    {"node": "setting5", "leafs":[
+                        {"key": "key5", "value": "value5", "path": ["root", "common", "setting5"], "diff": "add"}
+                    ], "children":[], "path": ["root","common"], "diff": "add"}
+                ], "path": ["root"], "diff": "no change"},
+                {"node":"key", "leafs": [
+                    {"key": "foo", "value": "bar", "path": ["root", "key"], "diff": "add"}
+                ], "children": [], "path": ["root"], "diff": "add"}
+            ], "path": [], "diff": "no change"}
+    },
+    "test_generate_diff_tree_yaml":
+    {
+        "expect": {
+            "node":"root", "leafs": [
+                {"key": "key", "value": "value", "path": ["root"], "diff": "remove"}
+            ], "children": [
+                {"node":"common", "leafs": [
+                    {"key": "setting1", "value": "Value 1", "path": ["root", "common"], "diff": "no change"},
+                    {"key": "setting2", "value": 200, "path": ["root", "common"], "diff": "remove"},
+                    {"key": "setting3", "value": true, "path": ["root", "common"], "diff": "remove"},
+                    {"key": "setting3", "value": null, "path": ["root", "common"], "diff": "add"},
+                    {"key": "setting4", "value": "blah blah", "path": ["root", "common"], "diff": "add"},
+                    {"key": "follow", "value": false, "path": ["root", "common"], "diff": "add"}
+                ], "children": [
+                    {"node": "setting6", "leafs":[
+                        {"key": "key", "value": "value", "path": ["root", "common", "setting6"], "diff": "no change"},
+                        {"key": "ops", "value": "vops", "path": ["root", "common", "setting6"], "diff": "add"}
+                    ], "children":[
+                        {"node":"doge", "leafs": [
+                            {"key": "wow", "value": "", "path": ["root", "common", "setting6", "doge"], "diff": "remove"},
+                            {"key": "wow", "value": "so much", "path": ["root", "common", "setting6", "doge"], "diff": "add"}
+                        ], "children": [], "path": ["root", "common", "setting6"], "diff": "no change"}
+                    ], "path": ["root", "common"], "diff": "no change"},
+                    {"node": "setting5", "leafs":[
+                        {"key": "key5", "value": "value5", "path": ["root", "common", "setting5"], "diff": "add"}
+                    ], "children":[], "path": ["root","common"], "diff": "add"}
+                ], "path": ["root"], "diff": "no change"},
+                {"node":"key", "leafs": [
+                    {"key": "foo", "value": "bar", "path": ["root", "key"], "diff": "add"}
+                ], "children": [], "path": ["root"], "diff": "add"}
+            ], "path": [], "diff": "no change"}
+    },
+    "test_get_diff":
+    {
+        "args":[
+            {"node": "root",
+                "leafs": [{"key": "group1", "value": "test", "path": ["root"]}],
+                "children": [{"node": "common",
+                  "leafs": [{"key": "setting1",
+                    "value": "Value 1",
+                    "path": ["root", "common"]},
+                   {"key": "setting2", "value": 200, "path": ["root", "common"]},
+                   {"key": "setting3", "value": true, "path": ["root", "common"]}],
+                  "children": [{"node": "setting6",
+                    "leafs": [{"key": "key",
+                      "value": "value",
+                      "path": ["root", "common", "setting6"]}],
+                    "children": [{"node": "doge",
+                      "leafs": [{"key": "wow",
+                        "value": "",
+                        "path": ["root", "common", "setting6", "doge"]}],
+                      "children": [],
+                      "path": ["root", "common", "setting6"]}],
+                    "path": ["root", "common"]}],
+                  "path": ["root"]}],
+                "path": []},
+                {"node": "root",
+                    "leafs": [],
+                    "children": [{"node": "common",
+                      "leafs": [{"key": "follow", "value": false, "path": ["root", "common"]},
+                       {"key": "setting1", "value": "Value 1", "path": ["root", "common"]},
+                       {"key": "setting3", "value": null, "path": ["root", "common"]},
+                       {"key": "setting4", "value": "blah blah", "path": ["root", "common"]}],
+                      "children": [{"node": "setting5",
+                        "leafs": [{"key": "key5",
+                          "value": "value5",
+                          "path": ["root", "common", "setting5"]}],
+                        "children": [],
+                        "path": ["root", "common"]},
+                       {"node": "setting6",
+                        "leafs": [{"key": "key",
+                          "value": "value",
+                          "path": ["root", "common", "setting6"]},
+                         {"key": "ops", "value": "vops", "path": ["root", "common", "setting6"]}],
+                        "children": [{"node": "doge",
+                          "leafs": [{"key": "wow",
+                            "value": "so much",
+                            "path": ["root", "common", "setting6", "doge"]}],
+                          "children": [],
+                          "path": ["root", "common", "setting6"]}],
+                        "path": ["root", "common"]}],
+                      "path": ["root"]},
+                     {"node": "key",
+                      "leafs": [{"key": "foo", "value": "bar", "path": ["root", "key"]}],
+                      "children": [],
+                      "path": ["root"]}],
+                    "path": []}
+        ],
+        "expect":{
+            "node":"root", "leafs": [
+                {"key": "key", "value": "value", "path": ["root"], "diff": "remove"}
+            ], "children": [
+                {"node":"common", "leafs": [
+                    {"key": "setting1", "value": "Value 1", "path": ["root", "common"], "diff": "no change"},
+                    {"key": "setting2", "value": 200, "path": ["root", "common"], "diff": "remove"},
+                    {"key": "setting3", "value": true, "path": ["root", "common"], "diff": "remove"},
+                    {"key": "setting3", "value": null, "path": ["root", "common"], "diff": "add"},
+                    {"key": "setting4", "value": "blah blah", "path": ["root", "common"], "diff": "add"},
+                    {"key": "follow", "value": false, "path": ["root", "common"], "diff": "add"}
+                ], "children": [
+                    {"node": "setting6", "leafs":[
+                        {"key": "key", "value": "value", "path": ["root", "common", "setting6"], "diff": "no change"},
+                        {"key": "ops", "value": "vops", "path": ["root", "common", "setting6"], "diff": "add"}
+                    ], "children":[
+                        {"node":"doge", "leafs": [
+                            {"key": "wow", "value": "", "path": ["root", "common", "setting6", "doge"], "diff": "remove"},
+                            {"key": "wow", "value": "so much", "path": ["root", "common", "setting6", "doge"], "diff": "add"}
+                        ], "children": [], "path": ["root", "common", "setting6"], "diff": "no change"}
+                    ], "path": ["root", "common"], "diff": "no change"},
+                    {"node": "setting5", "leafs":[
+                        {"key": "key5", "value": "value5", "path": ["root", "common", "setting5"], "diff": "add"}
+                    ], "children":[], "path": ["root","common"], "diff": "add"}
+                ], "path": ["root"], "diff": "no change"},
+                {"node":"key", "leafs": [
+                    {"key": "foo", "value": "bar", "path": ["root", "key"], "diff": "add"}
+                ], "children": [], "path": ["root"], "diff": "add"}
+            ], "path": [], "diff": "no change"}
+    },
+    "test_get_diff_wrong_args":{
+        "args":[
+            [],0
         ]
+    },
+    "test_get_diff_wrong_format_args":{
+        "args":{
+            "no root":[
+                {"node":"common", "leafs": [
+                    {"key": "setting2", "value": "Value 2", "path": ["common"]}
+                ], "children": [], "path": []},
+                {"node":"common", "leafs": [
+                    {"key": "setting2", "value": "Value 2", "path": ["common"]}
+                ], "children": [], "path": []}
+            ],
+            "root have path": [
+                {"node":"root", "leafs": [
+                    {"key": "setting1", "value": "Value 1", "path": ["common"]}
+                ], "children": [], "path": ["common"]},
+                {"node":"root", "leafs": [
+                    {"key": "setting1", "value": "Value 1", "path": ["common"]}
+                ], "children": [], "path": ["common"]}
+            ],
+            "wrong attr in leaf":[
+                {"node":"root", "leafs": [
+                    {"key": "setting1", "set": "Value 1"}
+                ], "children": [], "path": []},
+                {"node":"root", "leafs": [
+                    {"key": "setting1", "set": "Value 1"}
+                ], "children": [], "path": []}
+            ],
+            "wrong attr in node":[
+                {"node":"root", "leaf": [
+                    {"key": "setting1", "value": "Value 1", "path": ["common"]}
+                ], "children": [], "parrents": []},
+                {"node":"root", "leaf": [
+                    {"key": "setting1", "value": "Value 1", "path": ["common"]}
+                ], "children": [], "parrents": []}
+            ]
+        }
+        
+    },
+    "test_get_diff_empty":{
+        "args":[
+            {"node":"root", "leafs": [], "children": [], "parrents": []},
+            {"node":"root", "leafs": [], "children": [], "parrents": []}
+        ],
+        "expect":{
+            "node":"root", "leafs": [], "children": [], "parrents": [], "diff": "no change"
+        }
     }
 }

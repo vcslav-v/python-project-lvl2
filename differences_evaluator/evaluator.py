@@ -7,13 +7,13 @@ def print_diff(
     second_file_path: str,
     format_output_file: str = None
 ):
-    print(generate_diff(first_file_path, second_file_path, format_output_file))
+    print(stylish(generate_diff(first_file_path, second_file_path)))
 
 
 def generate_diff(
     first_file_path: str,
     second_file_path: str
-) -> str:
+) -> dict:
     """Generate diffirences of two files.
 
     Parameters:
@@ -21,43 +21,34 @@ def generate_diff(
         second_file_path: path to second target file
         format_file: format needed plain or json
     """
-    first_data = file_parser.get_data(first_file_path)
-    second_data = file_parser.get_data(second_file_path)
-    if not first_data or not second_data:
+    first_file_data = file_parser.get_repr(
+        file_parser.get_data(first_file_path)
+    )
+    second_file_data = file_parser.get_repr(
+        file_parser.get_data(second_file_path)
+    )
+    if not first_file_data or not second_file_data:
         return
 
-    result = get_diff_string(first_data, second_data)
+    diff = get_diff(first_file_data, second_file_data)
 
-    return result
+    return diff
 
 
-def get_diff_string(first_data: dict, second_data: dict) -> str:
-    """Generation of the difference in format.
+def get_diff():
+    pass
+
+
+def stylish(diff_data: dict) -> str:
+    """Format diff data dict.
      - deleted key: value
      + added key: value
        unchanged key: value
 
     Parameters:
-        first_data: first data dict
-        second_data: second data dict
+        diff_data: differences data representation
 
     Returns:
         formated string
     """
-    result = '{\n'
-    set_of_keys = set(first_data.keys()).union(set(second_data.keys()))
-    for key in set_of_keys:
-        first_value = first_data.get(key)
-        second_value = second_data.get(key)
-        pattern = ' {key}: {value}\n'
-        if second_value is None:
-            result += '  -' + pattern.format(key=key, value=first_value)
-        elif first_value is None:
-            result += '  +' + pattern.format(key=key, value=second_value)
-        elif first_value == second_value:
-            result += '   ' + pattern.format(key=key, value=first_value)
-        elif first_value != second_value:
-            result += '  -' + pattern.format(key=key, value=first_value)
-            result += '  +' + pattern.format(key=key, value=second_value)
-    result = result + '}'
-    return result
+    pass
