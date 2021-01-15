@@ -51,10 +51,10 @@ def get_repr(
 
     Returns:
         representation tree with two type object
-        node - {'node': 'node', 'leafs': [], 'children':[], 'path':()}
-        leaf - {'key':'setting1', 'value': 'Value 1', 'path':()}
+        node - {'node': 'node', 'leafs': {}, 'children':[], 'path':()}
+        leaf - {'key': 'value'}
     """
-    result = {'node': node, 'leafs': [], 'children': [], 'path': path}
+    result = {'node': node, 'leafs': {}, 'children': [], 'path': path}
 
     new_path = path.copy()
     new_path.append(node)
@@ -63,7 +63,5 @@ def get_repr(
         if type(value) is dict:
             result['children'].append(get_repr(value, key, new_path))
         else:
-            result['leafs'].append(
-                {'key': key, 'value': value, 'path': new_path}
-            )
+            result['leafs'][key] = value
     return result

@@ -35,8 +35,17 @@ def generate_diff(
     return diff
 
 
-def get_diff():
-    pass
+def get_diff(start_data: dict, end_data: dict) -> dict:
+    """Generate differences data.
+
+    Parameters:
+        start_data: formated dict with data
+        end_data: formated dict with data
+
+    Returns:
+        formated data with key "diff": add/remove/no change
+        
+    """
 
 
 def stylish(diff_data: dict) -> str:
