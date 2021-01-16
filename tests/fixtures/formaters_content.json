@@ -92,12 +92,10 @@
         ],
         "expect":
             [
-                "Property 'group1' was added with value: 888",
-                "common: {",
+                "Property 'group1' was updated. From [complex value] to 888",
                 "Property 'common.setting3' was updated. From true to false",
-                "Property 'common.setting6.doge.wow' was removed.",
-                "Property 'common.setting6.doge.wow1' was added with value: ''",
-                "Property 'group1' was removed."
+                "Property 'common.setting6.doge.wow' was removed",
+                "Property 'common.setting6.doge.wow1' was added with value: ''"
             ]
     },
     "test_plain_empty_diff":

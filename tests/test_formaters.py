@@ -42,7 +42,7 @@ def test_plain():
 
 
 def test_plain_empty_diff():
-    result = formaters.stylish(
+    result = formaters.plain(
         *test_content['test_plain_empty_diff']['args']
     )
     assert result == test_content['test_plain_empty_diff']['expect']
