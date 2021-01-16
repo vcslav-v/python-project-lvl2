@@ -28,3 +28,21 @@ def test_stylish_empty_diff():
         *test_content['test_stylish_empty_diff']['args']
     )
     assert result == test_content['test_stylish_empty_diff']['expect']
+
+
+def test_plain():
+    result = formaters.plain(
+        *test_content['test_plain']['args']
+    )
+    expect = set(test_content['test_plain']['expect'])
+    result = result.split('\n')
+    result = list(map(lambda line: line.strip(), result))
+    result = set(result)
+    assert result == expect
+
+
+def test_plain_empty_diff():
+    result = formaters.stylish(
+        *test_content['test_plain_empty_diff']['args']
+    )
+    assert result == test_content['test_plain_empty_diff']['expect']

@@ -58,5 +58,54 @@
             {"node": "root", "leafs": [], "children": [], "diff": "no change"}
         ],
         "expect": "{\n}"
+    },
+    "test_plain": 
+    {
+        "args": 
+        [
+            {"node": "root",
+                "leafs":[
+                    {"key": "group1", "value": 888, "diff": "added"}],
+                "children": [{"node": "common",
+                    "leafs": [
+                    {"key": "setting1","value": "Value 1","diff": "no change"},
+                    {"key": "setting2", "value": 200, "diff": "no change"},
+                    {"key": "setting3", "value": true, "diff": "removed"},
+                    {"key": "setting3", "value": false, "diff": "added"}],
+                    "children": [
+                        {"node": "setting6", "leafs": [
+                            {"key": "key", "value": "value", "diff": "no change"}],
+                        "children": [
+                        {"node": "doge", "leafs": [
+                            {"key": "wow", "value": "", "diff": "removed"},
+                            {"key": "wow1", "value": "", "diff": "added"}
+                            ],
+                            "children": [], "diff": "no change"}],
+                        "diff": "no change"}],
+                    "diff": "no change"},
+                    {"node": "group1",
+                        "leafs": [{"key": "test", "value": "test", "diff": "removed"}],
+                        "children": [],
+                        "diff": "removed"}
+                    ],
+                "diff": "no change"}
+        ],
+        "expect":
+            [
+                "Property 'group1' was added with value: 888",
+                "common: {",
+                "Property 'common.setting3' was updated. From true to false",
+                "Property 'common.setting6.doge.wow' was removed.",
+                "Property 'common.setting6.doge.wow1' was added with value: ''",
+                "Property 'group1' was removed."
+            ]
+    },
+    "test_plain_empty_diff":
+    {
+        "args":
+        [
+            {"node": "root", "leafs": [], "children": [], "diff": "no change"}
+        ],
+        "expect": ""
     }
 }
