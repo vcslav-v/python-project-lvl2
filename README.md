@@ -8,3 +8,6 @@
 
 ### YAML
 [![How to use](https://asciinema.org/a/11uxO6vWypUr5M20m9yaLw5m3.svg)](https://asciinema.org/a/11uxO6vWypUr5M20m9yaLw5m3?autoplay=1)
+
+### Plain format 
+[![How to use](https://asciinema.org/a/J98uoQcYmLUL2YPWUNXjC8VPc.svg)](https://asciinema.org/a/J98uoQcYmLUL2YPWUNXjC8VPc?autoplay=1)
