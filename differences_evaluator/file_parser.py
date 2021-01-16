@@ -1,5 +1,6 @@
 import json
 import os
+from typing import List
 
 import yaml
 
@@ -35,3 +36,30 @@ def get_extension(file_path: str) -> str:
     """
     _, file_extension = os.path.splitext(file_path)
     return file_extension[1:]
+
+
+def get_repr(
+    data: dict,
+    node: str = 'root',
+    path: List['str'] = []
+) -> dict:
+    """Make inner representation tree from data dict.
+
+    Parameters:
+        data: data from file
+        node: name of node
+
+    Returns:
+        representation tree with two type object
+        node - {'node': 'node', 'leafs': {}, set_of_children: [],'children':[]}
+        leaf - {'key': 'value'}
+    """
+    result = {'node': node, 'leafs': {}, 'set_of_children': [], 'children': []}
+
+    for key, value in data.items():
+        if type(value) is dict:
+            result['set_of_children'].append(key)
+            result['children'].append(get_repr(value, key))
+        else:
+            result['leafs'][key] = value
+    return result

@@ -1,0 +1,150 @@
+{
+    "test_stylish": 
+    {
+        "args": 
+        [
+            {"node": "root",
+                "leafs":[
+                    {"key": "group1", "value": 888, "diff": "added"}],
+                "children": [{"node": "common",
+                    "leafs": [
+                    {"key": "setting1","value": "Value 1","diff": "no change"},
+                    {"key": "setting2", "value": 200, "diff": "no change"},
+                    {"key": "setting3", "value": true, "diff": "removed"},
+                    {"key": "setting3", "value": false, "diff": "added"}],
+                    "children": [
+                        {"node": "setting6", "leafs": [
+                            {"key": "key", "value": "value", "diff": "no change"}],
+                        "children": [
+                        {"node": "doge", "leafs": [
+                            {"key": "wow", "value": "", "diff": "removed"},
+                            {"key": "wow1", "value": "", "diff": "added"}
+                            ],
+                            "children": [], "diff": "no change"}],
+                        "diff": "no change"}],
+                    "diff": "no change"},
+                    {"node": "group1",
+                        "leafs": [{"key": "test", "value": "test", "diff": "removed"}],
+                        "children": [],
+                        "diff": "removed"}
+                    ],
+                "diff": "no change"}
+        ],
+        "expect":
+            [
+                "+ group1: 888",
+                "common: {",
+                "setting1: Value 1",
+                "setting2: 200",
+                "- setting3: true",
+                "+ setting3: false",
+                "setting6: {",
+                "key: value",
+                "doge: {",
+                "- wow:",
+                "+ wow1:",
+                "}",
+                "}",
+                "}",
+                "- group1: {",
+                "test: test",
+                "}"
+            ]
+    },
+    "test_stylish_empty_diff":
+    {
+        "args":
+        [
+            {"node": "root", "leafs": [], "children": [], "diff": "no change"}
+        ],
+        "expect": "{\n}"
+    },
+    "test_generate_diff_flat_json":
+    {
+        "expect": {
+            "node":"root", "leafs": [
+                {"key": "follow", "value": false, "diff": "removed"},
+                {"key": "proxy", "value": "123.234.53.22", "diff": "removed"},
+                {"key": "verbose", "value": true, "diff": "added"},
+                {"key": "host", "value": "hexlet.io", "diff": "no change"},
+                {"key": "timeout", "value": 50, "diff": "removed"},
+                {"key": "timeout", "value": 20, "diff": "added"}
+            ], "children": [], "diff": "no change"}
+    },
+    "test_generate_diff_flat_yaml":
+    {
+        "expect": {
+            "node":"root", "leafs": [
+                {"key": "test", "value": "some_string", "diff": "removed"},
+                {"key": "num", "value": 43, "diff": "removed"},
+                {"key": "ip_address", "value": "192.168.1.1", "diff": "removed"},
+                {"key": "ip_address", "value": "255.255.1.1", "diff": "added"},
+                {"key": "boolean", "value": false, "diff": "no change"},
+                {"key": "host", "value": "hexlet.io", "diff": "added"}
+            ], "children": [], "diff": "no change"}
+    },
+    "test_generate_diff_tree_json":
+    {
+        "expect": {
+            "node":"root", "leafs": [
+                {"key": "key", "value": "value", "diff": "removed"}
+            ], "children": [
+                {"node":"common", "leafs": [
+                    {"key": "setting1", "value": "Value 1", "diff": "no change"},
+                    {"key": "setting2", "value": 200, "diff": "removed"},
+                    {"key": "setting3", "value": true, "diff": "removed"},
+                    {"key": "setting3", "value": null, "diff": "added"},
+                    {"key": "setting4", "value": "blah blah", "diff": "added"},
+                    {"key": "follow", "value": false, "diff": "added"}
+                ], "children": [
+                    {"node": "setting6", "leafs":[
+                        {"key": "key", "value": "value", "diff": "no change"},
+                        {"key": "ops", "value": "vops", "diff": "added"}
+                    ], "children":[
+                        {"node":"doge", "leafs": [
+                            {"key": "wow", "value": "", "diff": "removed"},
+                            {"key": "wow", "value": "so much", "diff": "added"}
+                        ], "children": [], "diff": "no change"}
+                    ], "diff": "no change"},
+                    {"node": "setting5", "leafs":[
+                        {"key": "key5", "value": "value5", "diff": "added"}
+                    ], "children":[], "diff": "added"}
+                ], "diff": "no change"},
+                {"node":"key", "leafs": [
+                    {"key": "foo", "value": "bar", "diff": "added"}
+                ], "children": [], "diff": "added"}
+            ], "diff": "no change"}
+    },
+    "test_generate_diff_tree_yaml":
+    {
+        "expect": {
+            "node":"root", "leafs": [
+                {"key": "key", "value": "value", "diff": "removed"}
+            ], "children": [
+                {"node":"common", "leafs": [
+                    {"key": "setting1", "value": "Value 1", "diff": "no change"},
+                    {"key": "setting2", "value": 200, "diff": "removed"},
+                    {"key": "setting3", "value": true, "diff": "removed"},
+                    {"key": "setting3", "value": null, "diff": "added"},
+                    {"key": "setting4", "value": "blah blah", "diff": "added"},
+                    {"key": "follow", "value": false, "diff": "added"}
+                ], "children": [
+                    {"node": "setting6", "leafs":[
+                        {"key": "key", "value": "value", "diff": "no change"},
+                        {"key": "ops", "value": "vops", "diff": "added"}
+                    ], "children":[
+                        {"node":"doge", "leafs": [
+                            {"key": "wow", "value": "", "diff": "removed"},
+                            {"key": "wow", "value": "so much", "diff": "added"}
+                        ], "children": [], "diff": "no change"}
+                    ], "diff": "no change"},
+                    {"node": "setting5", "leafs":[
+                        {"key": "key5", "value": "value5", "diff": "added"}
+                    ], "children":[], "diff": "added"}
+                ], "diff": "no change"},
+                {"node":"key", "leafs": [
+                    {"key": "foo", "value": "bar", "diff": "added"}
+                ], "children": [], "diff": "added"}
+            ], "diff": "no change"}
+    }
+}
