@@ -60,18 +60,22 @@
         "expect":
         {"node": "root",
           "leafs": {"group1": "test"},
+          "set_of_children": ["common"],
           "children": [{"node": "common",
             "leafs": {"setting1": "Value 1",
              "setting2": 200,
              "setting3": true},
+            "set_of_children":["setting6"],
             "children": [{"node": "setting6",
               "leafs": {"key": "value"},
+              "set_of_children":["doge"],
               "children": [{"node": "doge",
                 "leafs": { "wow": ""},
-                "children": [],
-                "path": ["root", "common", "setting6"]}],
-              "path": ["root", "common"]}],
-            "path": ["root"]}],
-          "path": []}
+                "set_of_children": [],
+                "children": []
+                }]
+              }]
+            }]
+          }
     }
 }

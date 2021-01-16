@@ -26,7 +26,6 @@ tree_first_json,"{
   },
   ""key"": ""value""
   }
-}
 "
 tree_second_json,"{
   ""common"": {
@@ -66,7 +65,7 @@ tree_first_yaml,"common:
   setting6:
     key: value
     doge:
-      wow:
+      wow: ''
 key: value
 "
 tree_second_yaml,"common: 
