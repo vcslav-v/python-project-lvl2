@@ -113,7 +113,6 @@ def plain(diff: dict) -> str:
             if leaf['diff'] == 'no change':
                 continue
             if leaf['key'] in unique_property.keys():
-                print(leaf)
                 old_value, new_value = _get_updated_values(
                     leaf['diff'],
                     leaf['value'],
