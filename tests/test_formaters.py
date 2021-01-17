@@ -46,3 +46,20 @@ def test_plain_empty_diff():
         *test_content['test_plain_empty_diff']['args']
     )
     assert result == test_content['test_plain_empty_diff']['expect']
+
+
+def test_json_diff_formater():
+    result = json.loads(formaters.json_diff_formater(
+        *test_content['test_json_diff_formater']['args']
+    ))
+    expect = test_content['test_json_diff_formater']['expect']
+    assert result == expect
+
+
+def test_json_diff_formater_empty_diff():
+    result = json.loads(formaters.json_diff_formater(
+        *test_content['test_json_diff_formater_empty_diff']['args']
+    ))
+    assert result == (
+        test_content['test_json_diff_formater_empty_diff']['expect']
+        )

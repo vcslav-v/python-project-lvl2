@@ -20,6 +20,8 @@ def generate_diff(
         return(formaters.stylish(diff))
     elif format_output_file == 'plain':
         return formaters.plain(diff)
+    elif format_output_file == 'json':
+        return formaters.json_diff_formater(diff)
 
 
 def get_diff(

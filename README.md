@@ -11,3 +11,6 @@
 
 ### Plain format 
 [![How to use](https://asciinema.org/a/J98uoQcYmLUL2YPWUNXjC8VPc.svg)](https://asciinema.org/a/J98uoQcYmLUL2YPWUNXjC8VPc?autoplay=1)
+
+### Josn format
+![How to use](https://asciinema.org/a/YeIMuWXMm3GKEt4WT4UqekGyJ.svg)](https://asciinema.org/a/YeIMuWXMm3GKEt4WT4UqekGyJ?autoplay=1)

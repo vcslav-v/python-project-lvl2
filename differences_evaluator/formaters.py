@@ -1,4 +1,5 @@
 """Formaters."""
+import json
 
 
 def stylish(diff: dict) -> str:
@@ -184,4 +185,66 @@ def plain(diff: dict) -> str:
         return node_rows
     output = []
     output.extend(_get_plain_node_rows(diff))
+    return '\n'.join(output)
+
+
+def json_diff_formater(diff: dict) -> str:
+    """Format diff data dict to json.
+    Parameters:
+        diff: differences data representation
+    Returns:
+        formated string
+    """
+    def _get_leafs(leafs, offset):
+        space = ' ' * offset
+        result_leafs = []
+        for leaf in leafs:
+            result_leafs.append('{space}{dump},'.format(
+                space=space,
+                dump=json.dumps(leaf)
+                )
+            )
+        result_leafs[-1] = result_leafs[-1][:-1]
+        return result_leafs
+
+    def _get_json_rows(node, offset=4):
+        space = ' ' * offset
+        min_space = ' ' * (offset-4)
+        node_name = '{space}"node": "{node}",'.format(
+            node=node['node'],
+            space=space
+        )
+        leafs_title = '{space}"leafs": ['.format(space=space)
+        empty_leafs_title = '{space}"leafs": [],'.format(space=space)
+        children_title = '{space}"children": ['.format(space=space)
+        empty_children_title = '{space}"children": [],'.format(space=space)
+        node_diff = '{space}"diff": "{diff_status}"'.format(
+            diff_status=node['diff'],
+            space=space
+        )
+        end_list = '{space}],'.format(space=space)
+        output = [min_space + '{']
+        output.append(node_name)
+
+        if node['leafs']:
+            output.append(leafs_title)
+            output.extend(_get_leafs(node['leafs'], offset+2))
+            output.append(end_list)
+        else:
+            output.append(empty_leafs_title)
+
+        if node['children']:
+            output.append(children_title)
+            for child in node['children']:
+                output.extend(_get_json_rows(child, offset+4))
+            output[-1] = output[-1][:-1]
+            output.append(end_list)
+        else:
+            output.append(empty_children_title)
+        output.append(node_diff)
+        output.append(min_space + '},')
+        return output
+
+    output = _get_json_rows(diff)
+    output[-1] = output[-1][:-1]
     return '\n'.join(output)
