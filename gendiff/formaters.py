@@ -24,36 +24,56 @@ def get_output_format_stylish(value):
         return value
 
 
+def sort_keys(node):
+    leaf_keys = [
+        {
+            'key': leaf['key'],
+            'type': 'leaf',
+            'value': leaf
+            } for leaf in node['leafs']
+        ]
+    children_keys = [
+        {
+            'key': child['node'],
+            'type': 'node',
+            'value': node
+            } for child in node['children']
+        ]
+    return sorted(
+        leaf_keys + children_keys, lambda key: key['key']
+        )
+
+
 def get_stylish_node_rows(node, offset=1, force_sign=None):
     node_rows = []
     spaces = ' ' * offset
-    for leaf in node['leafs']:
-        sign = get_sign_stylish(leaf)
-        node_rows.append(
-            '{spaces} {sign} {key}: {value}'.format(
-                spaces=spaces,
-                sign=force_sign or get_sign_stylish(leaf),
-                key=leaf['key'],
-                value=get_output_format_stylish(leaf['value'])
+    sorted_keys = sort_keys(node)
+    for key in sorted_keys:
+        if key['type'] == 'leaf':
+            sign = get_sign_stylish(key['value'])
+            node_rows.append(
+                '{spaces} {sign} {key}: {value}'.format(
+                    spaces=spaces,
+                    sign=force_sign or get_sign_stylish(key['value']),
+                    key=key['key'],
+                    value=get_output_format_stylish(key['value']['value'])
+                )
             )
-        )
-
-    if node['children']:
-        for child in node['children']:
-            sign = force_sign or get_sign_stylish(child)
+        elif key['type'] == 'node':
+            sign = force_sign or get_sign_stylish(key['value'])
             node_rows.append(
                 '{spaces} {sign} {node}: '.format(
                     sign=sign,
                     spaces=spaces,
-                    node=child['node']
+                    node=key['key']
                 ) + '{'
             )
-            if force_sign or child['diff'] != 'no change':
+            if force_sign or key['value']['diff'] != 'no change':
                 node_rows.extend(
-                    get_stylish_node_rows(child, offset+4, ' ')
+                    get_stylish_node_rows(key['value'], offset+4, ' ')
                 )
             else:
-                node_rows.extend(get_stylish_node_rows(child, offset+4))
+                node_rows.extend(get_stylish_node_rows(key['value'], offset+4))
     node_rows.append(spaces + '}')
     return node_rows
 
