@@ -37,4 +37,4 @@ def get_extension(file_path: pathlib.Path) -> str:
         file extention
     """
     _, file_extension = os.path.splitext(file_path)
-    return file_extension[1:]
+    return file_extension
