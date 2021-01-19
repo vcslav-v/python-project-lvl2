@@ -49,6 +49,8 @@ def sort_keys(node):
                 sorted_keys[i], sorted_keys[i+1] = (
                     sorted_keys[i+1], sorted_keys[i]
                 )
+    if node['node'] == 'group1':
+        print(sorted_keys)
     return sorted_keys
 
 
