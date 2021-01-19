@@ -45,7 +45,7 @@ def sort_keys(node):
         )
     for i in range(len(sorted_keys)-1):
         if sorted_keys[i]['key'] == sorted_keys[i+1]['key']:
-            if sorted_keys[i]['type'] == 'node':
+            if sorted_keys[i]['value']['diff'] == 'added':
                 sorted_keys[i], sorted_keys[i+1] = (
                     sorted_keys[i+1], sorted_keys[i]
                 )
