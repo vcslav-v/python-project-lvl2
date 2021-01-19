@@ -39,10 +39,16 @@ def sort_keys(node):
             'value': child
             } for child in node['children']
         ]
-    sorted_keys = sorted(
+    pre_sorted_keys = sorted(
         leaf_keys + children_keys, key=lambda key: key['key']
         )
-
+    sorted_keys = [pre_sorted_keys[0]]
+    for key, next_key in zip(sorted_keys, sorted_keys[1:]):
+        if key['key'] == next_key['key'] and key[type] == 'node':
+            sorted_keys[-1] = next_key
+            sorted_keys.append(key)
+        else:
+            sorted_keys.append(next_key)
     return sorted_keys
 
 
