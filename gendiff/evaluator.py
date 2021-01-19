@@ -31,7 +31,7 @@ def sort_data(data):
     sorted_data = {}
     for key in sorted_keys:
         sorted_data[key] = data[key]
-    return key
+    return sorted_data
 
 
 def get_diff_force(data: dict, node: str, diff_status: str):
