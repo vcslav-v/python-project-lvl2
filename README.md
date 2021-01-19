@@ -15,12 +15,16 @@ make install
 
 ## Generate diff
 
+```
+gendiff [-h] [-f {stylish,plain,json}] first_file second_file
+```
+
 #### Positional arguments:
-  first_file - path to your first file
-  second_file - path to your second file
+* first_file - path to your first file
+* second_file - path to your second file
 
 #### Optional arguments:
-  -f (--format) set format of output from {stylish,plain,json}
+* -f (--format) set format of output from {stylish,plain,json}
                         
 
 ### JSON
