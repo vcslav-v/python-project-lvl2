@@ -36,7 +36,7 @@ def sort_keys(node):
         {
             'key': child['node'],
             'type': 'node',
-            'value': node
+            'value': child
             } for child in node['children']
         ]
     return sorted(
