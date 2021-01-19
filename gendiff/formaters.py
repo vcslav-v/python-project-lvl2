@@ -39,9 +39,11 @@ def sort_keys(node):
             'value': child
             } for child in node['children']
         ]
-    return sorted(
+    sorted_keys = sorted(
         leaf_keys + children_keys, key=lambda key: key['key']
         )
+    print(sorted_keys)
+    return sorted_keys
 
 
 def get_stylish_node_rows(node, offset=1, force_sign=None):
