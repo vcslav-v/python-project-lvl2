@@ -24,7 +24,7 @@ def get_output_format_stylish(value):
         return value
 
 
-def get_stylish_node_rows(node, offset=3, force_sign=None):
+def get_stylish_node_rows(node, offset=1, force_sign=None):
     node_rows = []
     spaces = ' ' * offset
     for leaf in node['leafs']:
@@ -39,7 +39,6 @@ def get_stylish_node_rows(node, offset=3, force_sign=None):
         )
         node_rows.append('')
 
-
     if node['children']:
         for child in node['children']:
             sign = force_sign or get_sign_stylish(child)
@@ -52,7 +51,7 @@ def get_stylish_node_rows(node, offset=3, force_sign=None):
             )
             if force_sign or child['diff'] != 'no change':
                 node_rows.extend(
-                    get_stylish_node_rows(child, offset+3, ' ')
+                    get_stylish_node_rows(child, offset, ' ')
                 )
             else:
                 node_rows.extend(get_stylish_node_rows(child, offset+3))
