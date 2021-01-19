@@ -24,7 +24,7 @@ def get_output_format_stylish(value):
         return value
 
 
-def get_stylish_node_rows(node, offset=3, force_sign=None):
+def get_stylish_node_rows(node, offset=1, force_sign=None):
     node_rows = []
     spaces = ' ' * offset
 

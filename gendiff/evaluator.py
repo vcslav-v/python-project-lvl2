@@ -6,7 +6,7 @@ import pathlib
 def generate_diff(
     first_file_path: pathlib.Path,
     second_file_path: pathlib.Path,
-    format_output_file: str
+    format_output_file: str = 'stylish'
 ) -> str:
     """Generate diffirences of two files.
 
