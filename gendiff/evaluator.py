@@ -1,5 +1,5 @@
 """Differences evaluator."""
-from differences_evaluator import file_parser, formaters
+from gendiff import file_parser, formaters
 import pathlib
 
 

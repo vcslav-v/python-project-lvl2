@@ -5,7 +5,7 @@ import os
 
 import pytest
 
-from differences_evaluator import file_parser
+from gendiff import file_parser
 
 with open(
     os.path.join('tests', 'fixtures', 'file_parser_content.json'), 'r'

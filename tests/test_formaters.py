@@ -2,7 +2,7 @@
 import json
 import os
 
-from differences_evaluator import formaters
+from gendiff import formaters
 
 with open(
     os.path.join('tests', 'fixtures', 'formaters_content.json'), 'r'

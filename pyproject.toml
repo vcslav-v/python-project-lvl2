@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["vcslav-v <vcslav.v@gmail.com>"]
 packages = [
-  { include = "differences_evaluator" },
+  { include = "gendiff" },
 ]
 
 [tool.poetry.dependencies]
@@ -12,7 +12,7 @@ python = "^3.8"
 PyYAML = "^5.3.1"
 
 [tool.poetry.scripts]
-gendiff = "differences_evaluator.scripts.gendiff:main"
+gendiff = "gendiff.scripts.gendiff:main"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.8.4"

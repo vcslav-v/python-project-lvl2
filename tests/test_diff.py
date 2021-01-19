@@ -1,8 +1,8 @@
-"""Tests for differences_evaluator"""
+"""Tests for gendiff"""
 import json
 import os
 
-from differences_evaluator import evaluator, file_parser
+from gendiff import evaluator, file_parser
 
 with open(
     os.path.join('tests', 'fixtures', 'evaluator_content.json'), 'r'

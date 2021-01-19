@@ -3,7 +3,7 @@
 
 import argparse
 import pathlib
-from differences_evaluator import evaluator
+from gendiff import evaluator
 
 
 def main():
