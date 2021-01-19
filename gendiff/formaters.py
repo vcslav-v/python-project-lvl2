@@ -40,7 +40,7 @@ def sort_keys(node):
             } for child in node['children']
         ]
     return sorted(
-        leaf_keys + children_keys, lambda key: key['key']
+        leaf_keys + children_keys, key=lambda key: key['key']
         )
 
 
