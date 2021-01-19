@@ -2,23 +2,29 @@
 """Generator differences run script."""
 
 import argparse
-
+import pathlib
 from differences_evaluator import evaluator
-
-parser = argparse.ArgumentParser(description='Generate diff')
-
-parser.add_argument('first_file')
-parser.add_argument('second_file')
-
-parser.add_argument('-f', '--format', help='set format of output')
-
-args = parser.parse_args()
 
 
 def main():
-    print(evaluator.generate_diff(
-        args.first_file, args.second_file, args.format)
+    parser = argparse.ArgumentParser(description='Generate diff')
+    parser.add_argument('first_file', type=pathlib.Path)
+    parser.add_argument('second_file', type=pathlib.Path)
+    parser.add_argument(
+        '-f', '--format',
+        help='set format of output',
+        type=str,
+        default='stylish',
+        choices=['stylish', 'plain', 'json']
     )
+    args = parser.parse_args()
+
+    try:
+        print(evaluator.generate_diff(
+            args.first_file, args.second_file, args.format)
+        )
+    except Exception as e:
+        print(e)
 
 
 if __name__ == "__main__":

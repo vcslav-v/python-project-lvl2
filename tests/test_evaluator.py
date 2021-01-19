@@ -2,14 +2,7 @@
 import json
 import os
 
-import pytest
-import yaml
-from differences_evaluator import evaluator
-
-from tests.fixtures.jsons import (fake_json, flat_first_json, flat_second_json,
-                                  wrong_json,tree_first_json, tree_second_json)
-from tests.fixtures.yamls import (fake_yaml, flat_first_yaml, flat_second_yaml,
-                                  wrong_yaml, tree_first_yaml,tree_second_yaml)
+from differences_evaluator import evaluator, file_parser
 
 with open(
     os.path.join('tests', 'fixtures', 'evaluator_content.json'), 'r'
@@ -40,23 +33,38 @@ def compare_node(node, expect):
 
 
 def test_get_diff_flat_json(flat_first_json, flat_second_json):
-    result = evaluator.get_diff(flat_first_json, flat_second_json)
+    start_data = file_parser.get_data(flat_first_json)
+    end_data = file_parser.get_data(flat_second_json)
+    result = evaluator.get_diff(start_data, end_data)
+    print(result)
     for leaf in result['leafs']:
-        assert leaf in test_content['test_get_diff_flat_json']['expect']['leafs']
-    result['leafs'] = test_content['test_get_diff_flat_json']['expect']['leafs']
+        assert leaf in (
+            test_content['test_get_diff_flat_json']['expect']['leafs']
+        )
+    result['leafs'] = (
+        test_content['test_get_diff_flat_json']['expect']['leafs']
+        )
     assert result == test_content['test_get_diff_flat_json']['expect']
 
 
 def test_get_diff_flat_yaml(flat_first_yaml, flat_second_yaml):
-    result = evaluator.get_diff(flat_first_yaml, flat_second_yaml)
+    start_data = file_parser.get_data(flat_first_yaml)
+    end_data = file_parser.get_data(flat_second_yaml)
+    result = evaluator.get_diff(start_data, end_data)
     for leaf in result['leafs']:
-        assert leaf in test_content['test_get_diff_flat_yaml']['expect']['leafs']
-    result['leafs'] = test_content['test_get_diff_flat_yaml']['expect']['leafs']
+        assert leaf in (
+            test_content['test_get_diff_flat_yaml']['expect']['leafs']
+            )
+    result['leafs'] = (
+        test_content['test_get_diff_flat_yaml']['expect']['leafs']
+    )
     assert result == test_content['test_get_diff_flat_yaml']['expect']
 
 
 def test_get_diff_tree_json(tree_first_json, tree_second_json):
-    result = evaluator.get_diff(tree_first_json, tree_second_json)
+    start_data = file_parser.get_data(tree_first_json)
+    end_data = file_parser.get_data(tree_second_json)
+    result = evaluator.get_diff(start_data, end_data)
     compare_node(
         result,
         test_content['test_get_diff_tree_json']['expect']
@@ -64,18 +72,48 @@ def test_get_diff_tree_json(tree_first_json, tree_second_json):
 
 
 def test_get_diff_tree_yaml(tree_first_yaml, tree_second_yaml):
-    result = evaluator.get_diff(tree_first_yaml, tree_second_yaml)
+    start_data = file_parser.get_data(tree_first_yaml)
+    end_data = file_parser.get_data(tree_second_yaml)
+    result = evaluator.get_diff(start_data, end_data)
     compare_node(
         result,
         test_content['test_get_diff_tree_yaml']['expect']
     )
 
 
-def test_get_diff_wrong_yaml(flat_first_yaml, wrong_yaml):
-    with pytest.raises(yaml.scanner.ScannerError):
-        evaluator.get_diff(flat_first_yaml, wrong_yaml)
+def test_generate_diff_stylish(tree_first_json, tree_second_json):
+    result = evaluator.generate_diff(
+        tree_first_json, tree_second_json, 'stylish'
+        )
+    expect = set(test_content['test_generate_diff_stylish']['expect'])
+    result = result.split('\n')
+    result = set(map(lambda line: line.strip(), result))
+    assert result == expect
 
 
-def test_get_diff_not_exist_file(flat_first_json, fake_json):
-    with pytest.raises(FileNotFoundError):
-        evaluator.get_diff(flat_first_json, fake_json)
+def test_generate_diff_plain(tree_first_json, tree_second_json):
+    result = evaluator.generate_diff(
+        tree_first_json, tree_second_json, 'plain'
+        )
+    expect = set(test_content['test_generate_diff_plain']['expect'])
+    result = result.split('\n')
+    result = set(map(lambda line: line.strip(), result))
+    assert result == expect
+
+
+def test_generate_diff_json(tree_first_json, tree_second_json):
+    result = evaluator.generate_diff(
+        tree_first_json, tree_second_json, 'json'
+        )
+    result = json.loads(result)
+    compare_node(result, test_content['test_generate_diff_json']['expect'])
+
+
+def test_generate_diff_json_yaml(tree_first_yaml, tree_second_yaml):
+    result = evaluator.generate_diff(
+        tree_first_yaml, tree_second_yaml, 'json'
+        )
+    result = json.loads(result)
+    compare_node(
+        result, test_content['test_generate_diff_json_yaml']['expect']
+        )
