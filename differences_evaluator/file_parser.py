@@ -1,6 +1,4 @@
 import json
-import os
-from typing import List
 import pathlib
 
 import yaml
