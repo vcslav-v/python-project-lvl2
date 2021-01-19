@@ -2,7 +2,7 @@ lint:
 	poetry run flake8 differences_evaluator
 
 install:
-	poetry install
+	python3 -m pip install --user dist/*.whl
 
 test:
 	poetry run pytest tests/
