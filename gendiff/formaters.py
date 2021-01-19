@@ -42,7 +42,7 @@ def sort_keys(node):
     sorted_keys = sorted(
         leaf_keys + children_keys, key=lambda key: key['key']
         )
-    print(sorted_keys)
+
     return sorted_keys
 
 
