@@ -50,10 +50,10 @@ def get_stylish_node_rows(node, offset=1, force_sign=None):
             )
             if force_sign or child['diff'] != 'no change':
                 node_rows.extend(
-                    get_stylish_node_rows(child, offset, ' ')
+                    get_stylish_node_rows(child, offset+2, ' ')
                 )
             else:
-                node_rows.extend(get_stylish_node_rows(child, offset+3))
+                node_rows.extend(get_stylish_node_rows(child, offset+2))
     node_rows.append(spaces + '}')
     return node_rows
 
