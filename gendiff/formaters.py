@@ -74,7 +74,7 @@ def get_stylish_node_rows(node, offset=1, force_sign=None):
                 )
             else:
                 node_rows.extend(get_stylish_node_rows(key['value'], offset+4))
-    node_rows.append(spaces-1 + '}')
+    node_rows.append(spaces[1:] + '}')
     return node_rows
 
 
