@@ -37,7 +37,6 @@ def get_stylish_node_rows(node, offset=1, force_sign=None):
                 value=get_output_format_stylish(leaf['value'])
             )
         )
-        node_rows.append('')
 
     if node['children']:
         for child in node['children']:
@@ -51,7 +50,7 @@ def get_stylish_node_rows(node, offset=1, force_sign=None):
             )
             if force_sign or child['diff'] != 'no change':
                 node_rows.extend(
-                    get_stylish_node_rows(child, offset, ' ')
+                    get_stylish_node_rows(child, offset+1, ' ')
                 )
             else:
                 node_rows.extend(get_stylish_node_rows(child, offset+3))
