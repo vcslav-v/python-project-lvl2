@@ -7,10 +7,10 @@
 ## How to install
 
 ```
-make install
+make package-install
 ```
 
-[![How to install](https://asciinema.org/a/4Oj9axXomyRMPbSXZ4nqASy15.svg)](https://asciinema.org/a/4Oj9axXomyRMPbSXZ4nqASy15?autoplay=1)
+[![How to install](https://asciinema.org/a/8cUjX02pgH3WUvhPhCeDnukCg.svg)](https://asciinema.org/a/8cUjX02pgH3WUvhPhCeDnukCg?autoplay=1)
 
 
 ## Generate diff
