@@ -15,12 +15,16 @@ make install
 
 ## Generate diff
 
+```
+gendiff [-h] [-f {stylish,plain,json}] first_file second_file
+```
+
 #### Positional arguments:
-  first_file - path to your first file
-  second_file - path to your second file
+* first_file - path to your first file
+* second_file - path to your second file
 
 #### Optional arguments:
-  -f (--format) set format of output from {stylish,plain,json}
+* -f (--format) set format of output from {stylish,plain,json}
                         
 
 ### JSON
@@ -32,5 +36,5 @@ make install
 ### Plain format 
 [![How to use](https://asciinema.org/a/J98uoQcYmLUL2YPWUNXjC8VPc.svg)](https://asciinema.org/a/J98uoQcYmLUL2YPWUNXjC8VPc?autoplay=1)
 
-### Josn format
-![How to use](https://asciinema.org/a/YeIMuWXMm3GKEt4WT4UqekGyJ.svg)](https://asciinema.org/a/YeIMuWXMm3GKEt4WT4UqekGyJ?autoplay=1)
+### Json format
+[![How to use](https://asciinema.org/a/YeIMuWXMm3GKEt4WT4UqekGyJ.svg)](https://asciinema.org/a/YeIMuWXMm3GKEt4WT4UqekGyJ?autoplay=1)
