@@ -26,6 +26,14 @@ def generate_diff(
         return formaters.json_diff_formater(diff)
 
 
+def sort_diff(diff):
+    diff['leafs'] = sorted(diff['leafs'], key=lambda leaf: leaf['key'])
+    diff['children'] = sorted(
+        diff['children'], key=lambda child: child['node']
+    )
+    return diff
+
+
 def get_diff_force(data: dict, node: str, diff_status: str):
     result = {
         'node': node, 'leafs': [], 'children': [], 'diff': diff_status
@@ -42,6 +50,7 @@ def get_diff_force(data: dict, node: str, diff_status: str):
             result['leafs'].append(
                 {'key': key, 'value': value, 'diff': diff_status}
                 )
+    result = sort_diff(result)
     return result
 
 
@@ -147,4 +156,5 @@ def get_diff(
                 get_leaf(key, end_value, diff_status['added'])
                 )
 
+    diff = sort_diff(diff)
     return diff
