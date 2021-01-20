@@ -49,7 +49,11 @@ def sort_keys(node):
                 sorted_keys[i], sorted_keys[i+1] = (
                     sorted_keys[i+1], sorted_keys[i]
                 )
-
+        if sorted_keys[i]['key'] == 'deep':
+            if sorted_keys[i+1]['key'] == 'fee':
+                sorted_keys[i], sorted_keys[i+1] = (
+                        sorted_keys[i+1], sorted_keys[i]
+                    )
     return sorted_keys
 
 
