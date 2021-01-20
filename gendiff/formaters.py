@@ -94,8 +94,8 @@ def get_output_plain_format(value):
         return 'true'
     elif value is None:
         return 'null'
-    elif value == '':
-        return "''"
+    elif type(value) is str:
+        return "'{value}'".format(value=value)
     elif type(value) in (dict, list):
         return "[complex value]"
     else:
@@ -116,17 +116,18 @@ def get_updated_plain_values(property_diff, property_value, other_value):
     return old_value, new_value
 
 
-
 def get_plain_node_rows(node, path=[]):
     node_rows = []
     if node['value'] != []:
-        last_key, last_value = node['value'][0]['key'], node['value'][0]['value']
+        last_key, last_value = (
+            node['value'][0]['key'], node['value'][0]['value']
+            )
     for value in node['value']:
         if value['type'] == 'node':
             new_path = path.copy()
             new_path.append(value['key'])
             node_rows.extend(get_plain_node_rows(value, new_path))
-        
+
         elif value['key'] == last_key and node_rows:
             node_rows[-1] = (
                 "Property '{path}' was updated. "
@@ -135,7 +136,7 @@ def get_plain_node_rows(node, path=[]):
                 old_value=get_output_plain_format(last_value),
                 new_value=get_output_plain_format(value['value'])
                 )
-        
+
         elif value['diff'] == 'added':
             node_rows.append(
                 "Property '{path}' was added with value: {value}".format(
@@ -150,7 +151,7 @@ def get_plain_node_rows(node, path=[]):
                     )
             )
         last_key, last_value = value['key'], value['value']
-        
+
     return node_rows
 
 
