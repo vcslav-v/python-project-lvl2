@@ -116,90 +116,41 @@ def get_updated_plain_values(property_diff, property_value, other_value):
     return old_value, new_value
 
 
-def _get_plain_status_property(node):
-    no_change_node_property = []
-    unique_property = {}
-    updated_property = {}
-
-    for leaf in node['leafs']:
-        if leaf['diff'] == 'no change':
-            continue
-        if leaf['key'] in unique_property.keys():
-            old_value, new_value = get_updated_plain_values(
-                leaf['diff'],
-                leaf['value'],
-                get_output_plain_format(
-                    unique_property.pop(leaf['key'])['value']
-                )
-            )
-            updated_property[leaf['key']] = {
-                'old_value': old_value,
-                'new_value': new_value
-                }
-            continue
-        unique_property[leaf['key']] = {
-            'diff': leaf['diff'],
-            'value': get_output_plain_format(leaf['value'])
-            }
-
-    for child in node['children']:
-        if child['node'] in unique_property.keys():
-            old_value, new_value = get_updated_plain_values(
-                child['diff'],
-                get_output_plain_format(child),
-                get_output_plain_format(
-                    unique_property.pop(child['node'])['value']
-                )
-            )
-            updated_property[child['node']] = {
-                    'old_value': old_value,
-                    'new_value': new_value
-                    }
-            continue
-        if child['diff'] == 'no change':
-            no_change_node_property.append(child)
-        else:
-            unique_property[child['node']] = {
-                'diff': child['diff'],
-                'value': get_output_plain_format(child)
-                }
-
-    return (no_change_node_property, unique_property, updated_property)
-
 
 def get_plain_node_rows(node, path=[]):
     node_rows = []
-    no_change_node_property, unique_property, updated_property = (
-        _get_plain_status_property(node)
-        )
-    for key, prop in unique_property.items():
-        if prop['diff'] == 'added':
+    if node['value'] != []:
+        last_key, last_value = node['value'][0]['key'], node['value'][0]['value']
+    for value in node['value']:
+        if value['type'] == 'node':
+            new_path = path.copy()
+            new_path.append(value['key'])
+            node_rows.extend(get_plain_node_rows(value, new_path))
+        
+        elif value['key'] == last_key and node_rows:
+            node_rows[-1] = (
+                "Property '{path}' was updated. "
+                "From {old_value} to {new_value}").format(
+                path=get_path(path, value['key']),
+                old_value=get_output_plain_format(last_value),
+                new_value=get_output_plain_format(value['value'])
+                )
+        
+        elif value['diff'] == 'added':
             node_rows.append(
                 "Property '{path}' was added with value: {value}".format(
-                    path=get_path(path, key),
-                    value=prop['value']
+                    path=get_path(path, value['key']),
+                    value=get_output_plain_format(value['value'])
                 )
             )
-        elif prop['diff'] == 'removed':
+        elif value['diff'] == 'removed':
             node_rows.append(
                 "Property '{path}' was removed".format(
-                    path=get_path(path, key)
+                    path=get_path(path, value['key'])
                     )
             )
-    for key, value in updated_property.items():
-        node_rows.append(
-                ("Property '{path}' was updated. "
-                    "From {old_value} to {new_value}").format(
-                    path=get_path(path, key),
-                    old_value=get_output_plain_format(value['old_value']),
-                    new_value=get_output_plain_format(value['new_value'])
-                )
-            )
-    if no_change_node_property:
-        for child in no_change_node_property:
-            new_path = path.copy()
-            new_path.append(child['node'])
-            node_rows.extend(get_plain_node_rows(child, new_path))
+        last_key, last_value = value['key'], value['value']
+        
     return node_rows
 
 
