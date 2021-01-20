@@ -12,7 +12,7 @@ def get_dict_format_stylish(value_dict, offset):
             spaces=spaces,
             key=key,
             value=get_output_format_stylish(
-                        value_dict[key], offset + 4
+                value_dict[key], offset + 4
             )
         )
         )
