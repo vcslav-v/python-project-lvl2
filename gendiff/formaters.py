@@ -4,89 +4,63 @@ import json
 # stylish
 
 
-def get_sign_stylish(diff_item):
-    if diff_item['diff'] == 'added':
-        return '+'
-    elif diff_item['diff'] == 'removed':
-        return '-'
-    elif diff_item['diff'] == 'no change':
-        return ' '
+def get_dict_format_stylish(value_dict, offset):
+    rows = ['{']
+    spaces = ' ' * offset
+    for key in value_dict.keys():
+        rows.append('{spaces}  {key}: {value}'.format(
+                    spaces=spaces,
+                    key=key,
+                    value=get_output_format_stylish(value_dict[key], offset+4)
+                    )
+                    )
+    rows.append(spaces[1:] + '}')
+    return '\n'.join(rows)
 
 
-def get_output_format_stylish(value):
+def get_output_format_stylish(value, offset):
     if value is False:
         return 'false'
     elif value is True:
         return 'true'
     elif value is None:
         return 'null'
+    elif type(value) == dict:
+        return get_dict_format_stylish(value, offset)
     else:
         return value
-
-
-def sort_keys(node):
-    leaf_keys = [
-        {
-            'key': leaf['key'],
-            'type': 'leaf',
-            'value': leaf
-            } for leaf in node['leafs']
-        ]
-    children_keys = [
-        {
-            'key': child['node'],
-            'type': 'node',
-            'value': child
-            } for child in node['children']
-        ]
-
-    sorted_keys = sorted(
-        leaf_keys + children_keys, key=lambda key: key['key']
-        )
-    for i in range(len(sorted_keys)-1):
-        if sorted_keys[i]['key'] == sorted_keys[i+1]['key']:
-            if sorted_keys[i]['value']['diff'] == 'added':
-                sorted_keys[i], sorted_keys[i+1] = (
-                    sorted_keys[i+1], sorted_keys[i]
-                )
-        if sorted_keys[i]['key'] == 'deep':
-            if sorted_keys[i+1]['key'] == 'fee':
-                sorted_keys[i], sorted_keys[i+1] = (
-                        sorted_keys[i+1], sorted_keys[i]
-                    )
-    return sorted_keys
 
 
 def get_stylish_node_rows(node, offset=1, force_sign=None):
     node_rows = []
     spaces = ' ' * offset
-    sorted_keys = sort_keys(node)
-    for key in sorted_keys:
-        if key['type'] == 'leaf':
-            sign = get_sign_stylish(key['value'])
+
+    sighs = {
+        'added': '+',
+        'removed': '-',
+        'no change': ' ',
+    }
+    for value in node['value']:
+        sign = sighs[value['diff']]
+
+        if value['type'] == 'leaf':
             node_rows.append(
                 '{spaces} {sign} {key}: {value}'.format(
                     spaces=spaces,
-                    sign=force_sign or get_sign_stylish(key['value']),
-                    key=key['key'],
-                    value=get_output_format_stylish(key['value']['value'])
+                    sign=sign,
+                    key=value['key'],
+                    value=get_output_format_stylish(value['value'], offset+4)
                 )
             )
-        elif key['type'] == 'node':
-            sign = force_sign or get_sign_stylish(key['value'])
+        elif value['type'] == 'node':
             node_rows.append(
                 '{spaces} {sign} {node}: '.format(
                     sign=sign,
                     spaces=spaces,
-                    node=key['key']
+                    node=value['key']
                 ) + '{'
             )
-            if force_sign or key['value']['diff'] != 'no change':
-                node_rows.extend(
-                    get_stylish_node_rows(key['value'], offset+4, ' ')
-                )
-            else:
-                node_rows.extend(get_stylish_node_rows(key['value'], offset+4))
+            node_rows.extend(get_stylish_node_rows(value, offset+4))
 
     node_rows.append(spaces[1:] + '}')
     return node_rows
