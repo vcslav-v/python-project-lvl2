@@ -1,93 +1,4 @@
 {
-    "test_get_diff_flat_json":
-    {
-        "expect": {
-            "node":"root", "leafs": [
-                {"key": "follow", "value": false, "diff": "removed"},
-                {"key": "proxy", "value": "123.234.53.22", "diff": "removed"},
-                {"key": "verbose", "value": true, "diff": "added"},
-                {"key": "host", "value": "hexlet.io", "diff": "no change"},
-                {"key": "timeout", "value": 50, "diff": "removed"},
-                {"key": "timeout", "value": 20, "diff": "added"}
-            ], "children": [], "diff": "no change"}
-    },
-    "test_get_diff_flat_yaml":
-    {
-        "expect": {
-            "node":"root", "leafs": [
-                {"key": "test", "value": "some_string", "diff": "removed"},
-                {"key": "num", "value": 43, "diff": "removed"},
-                {"key": "ip_address", "value": "192.168.1.1", "diff": "removed"},
-                {"key": "ip_address", "value": "255.255.1.1", "diff": "added"},
-                {"key": "boolean", "value": false, "diff": "no change"},
-                {"key": "host", "value": "hexlet.io", "diff": "added"}
-            ], "children": [], "diff": "no change"}
-    },
-    "test_get_diff_tree_json":
-    {
-        "expect": {
-            "node":"root", "leafs": [
-                {"key": "key", "value": "value", "diff": "removed"}
-            ], "children": [
-                {"node":"common", "leafs": [
-                    {"key": "setting1", "value": "Value 1", "diff": "no change"},
-                    {"key": "setting2", "value": 200, "diff": "removed"},
-                    {"key": "setting3", "value": true, "diff": "removed"},
-                    {"key": "setting3", "value": null, "diff": "added"},
-                    {"key": "setting4", "value": "blah blah", "diff": "added"},
-                    {"key": "follow", "value": false, "diff": "added"}
-                ], "children": [
-                    {"node": "setting6", "leafs":[
-                        {"key": "key", "value": "value", "diff": "no change"},
-                        {"key": "ops", "value": "vops", "diff": "added"}
-                    ], "children":[
-                        {"node":"doge", "leafs": [
-                            {"key": "wow", "value": "", "diff": "removed"},
-                            {"key": "wow", "value": "so much", "diff": "added"}
-                        ], "children": [], "diff": "no change"}
-                    ], "diff": "no change"},
-                    {"node": "setting5", "leafs":[
-                        {"key": "key5", "value": "value5", "diff": "added"}
-                    ], "children":[], "diff": "added"}
-                ], "diff": "no change"},
-                {"node":"key", "leafs": [
-                    {"key": "foo", "value": "bar", "diff": "added"}
-                ], "children": [], "diff": "added"}
-            ], "diff": "no change"}
-    },
-    "test_get_diff_tree_yaml":
-    {
-        "expect": {
-            "node":"root", "leafs": [
-                {"key": "key", "value": "value", "diff": "removed"}
-            ], "children": [
-                {"node":"common", "leafs": [
-                    {"key": "setting1", "value": "Value 1", "diff": "no change"},
-                    {"key": "setting2", "value": 200, "diff": "removed"},
-                    {"key": "setting3", "value": true, "diff": "removed"},
-                    {"key": "setting3", "value": null, "diff": "added"},
-                    {"key": "setting4", "value": "blah blah", "diff": "added"},
-                    {"key": "follow", "value": false, "diff": "added"}
-                ], "children": [
-                    {"node": "setting6", "leafs":[
-                        {"key": "key", "value": "value", "diff": "no change"},
-                        {"key": "ops", "value": "vops", "diff": "added"}
-                    ], "children":[
-                        {"node":"doge", "leafs": [
-                            {"key": "wow", "value": "", "diff": "removed"},
-                            {"key": "wow", "value": "so much", "diff": "added"}
-                        ], "children": [], "diff": "no change"}
-                    ], "diff": "no change"},
-                    {"node": "setting5", "leafs":[
-                        {"key": "key5", "value": "value5", "diff": "added"}
-                    ], "children":[], "diff": "added"}
-                ], "diff": "no change"},
-                {"node":"key", "leafs": [
-                    {"key": "foo", "value": "bar", "diff": "added"}
-                ], "children": [], "diff": "added"}
-            ], "diff": "no change"}
-    },
-    
     "test_generate_diff_stylish":
     {
         "expect":[
@@ -121,77 +32,14 @@
     "test_generate_diff_plain":
     {
         "expect":[
-            "Property 'key' was updated. From value to [complex value]",
+            "Property 'key' was updated. From 'value' to [complex value]",
             "Property 'common.setting2' was removed",
             "Property 'common.setting3' was updated. From true to null",
             "Property 'common.follow' was added with value: false",
-            "Property 'common.setting4' was added with value: blah blah",
-            "Property 'common.setting6.ops' was added with value: vops",
-            "Property 'common.setting6.doge.wow' was updated. From '' to so much",
+            "Property 'common.setting4' was added with value: 'blah blah'",
+            "Property 'common.setting6.ops' was added with value: 'vops'",
+            "Property 'common.setting6.doge.wow' was updated. From '' to 'so much'",
             "Property 'common.setting5' was added with value: [complex value]"
         ]
-    },
-    "test_generate_diff_json":
-    {
-        "expect":{
-            "node":"root", "leafs": [
-                {"key": "key", "value": "value", "diff": "removed"}
-            ], "children": [
-                {"node":"common", "leafs": [
-                    {"key": "setting1", "value": "Value 1", "diff": "no change"},
-                    {"key": "setting2", "value": 200, "diff": "removed"},
-                    {"key": "setting3", "value": true, "diff": "removed"},
-                    {"key": "setting3", "value": null, "diff": "added"},
-                    {"key": "setting4", "value": "blah blah", "diff": "added"},
-                    {"key": "follow", "value": false, "diff": "added"}
-                ], "children": [
-                    {"node": "setting6", "leafs":[
-                        {"key": "key", "value": "value", "diff": "no change"},
-                        {"key": "ops", "value": "vops", "diff": "added"}
-                    ], "children":[
-                        {"node":"doge", "leafs": [
-                            {"key": "wow", "value": "", "diff": "removed"},
-                            {"key": "wow", "value": "so much", "diff": "added"}
-                        ], "children": [], "diff": "no change"}
-                    ], "diff": "no change"},
-                    {"node": "setting5", "leafs":[
-                        {"key": "key5", "value": "value5", "diff": "added"}
-                    ], "children":[], "diff": "added"}
-                ], "diff": "no change"},
-                {"node":"key", "leafs": [
-                    {"key": "foo", "value": "bar", "diff": "added"}
-                ], "children": [], "diff": "added"}
-            ], "diff": "no change"}
-    },
-    "test_generate_diff_json_yaml":{
-        "expect":{
-            "node":"root", "leafs": [
-                {"key": "key", "value": "value", "diff": "removed"}
-            ], "children": [
-                {"node":"common", "leafs": [
-                    {"key": "setting1", "value": "Value 1", "diff": "no change"},
-                    {"key": "setting2", "value": 200, "diff": "removed"},
-                    {"key": "setting3", "value": true, "diff": "removed"},
-                    {"key": "setting3", "value": null, "diff": "added"},
-                    {"key": "setting4", "value": "blah blah", "diff": "added"},
-                    {"key": "follow", "value": false, "diff": "added"}
-                ], "children": [
-                    {"node": "setting6", "leafs":[
-                        {"key": "key", "value": "value", "diff": "no change"},
-                        {"key": "ops", "value": "vops", "diff": "added"}
-                    ], "children":[
-                        {"node":"doge", "leafs": [
-                            {"key": "wow", "value": "", "diff": "removed"},
-                            {"key": "wow", "value": "so much", "diff": "added"}
-                        ], "children": [], "diff": "no change"}
-                    ], "diff": "no change"},
-                    {"node": "setting5", "leafs":[
-                        {"key": "key5", "value": "value5", "diff": "added"}
-                    ], "children":[], "diff": "added"}
-                ], "diff": "no change"},
-                {"node":"key", "leafs": [
-                    {"key": "foo", "value": "bar", "diff": "added"}
-                ], "children": [], "diff": "added"}
-            ], "diff": "no change"}
     }
 }
