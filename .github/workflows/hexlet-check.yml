@@ -3,8 +3,7 @@ name: hexlet-check
 on:
   push:
     branches:
-      - hexlet-check
-
+      -'**'
 jobs:
   build:
     runs-on: ubuntu-latest
