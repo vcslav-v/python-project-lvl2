@@ -68,7 +68,7 @@ def get_diff(
         'type': 'node',
         'diff': diff_status['no change']
         }
-    all_keys = set(start_data.keys()) and set(end_data.keys())
+    all_keys = set(start_data.keys()).union(set(end_data.keys()))
     for key in all_keys:
 
         try:
@@ -86,7 +86,6 @@ def get_diff(
             end_value = end_data[key]
         except KeyError:
             #  the key with the node was removed
-            start_value = start_data[key]
             diff['value'].append(get_leaf(
                 key, start_value, diff_status['removed']
                 )
