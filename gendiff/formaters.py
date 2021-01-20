@@ -11,7 +11,9 @@ def get_dict_format_stylish(value_dict, offset):
         rows.append('{spaces}   {key}: {value}'.format(
                     spaces=spaces,
                     key=key,
-                    value=get_output_format_stylish(value_dict[key], offset+4)
+                    value=get_output_format_stylish(
+                        value_dict[key], offset + 4
+                        )
                     )
                     )
     rows.append(spaces[1:] + '}')
@@ -49,7 +51,7 @@ def get_stylish_node_rows(node, offset=1, force_sign=None):
                     spaces=spaces,
                     sign=sign,
                     key=value['key'],
-                    value=get_output_format_stylish(value['value'], offset+4)
+                    value=get_output_format_stylish(value['value'], offset + 4)
                 )
             )
         elif value['type'] == 'node':
@@ -60,7 +62,7 @@ def get_stylish_node_rows(node, offset=1, force_sign=None):
                     node=value['key']
                 ) + '{'
             )
-            node_rows.extend(get_stylish_node_rows(value, offset+4))
+            node_rows.extend(get_stylish_node_rows(value, offset + 4))
 
     node_rows.append(spaces[1:] + '}')
     return node_rows
@@ -121,7 +123,7 @@ def get_plain_node_rows(node, path=[]):
     if node['value'] != []:
         last_key, last_value = (
             node['value'][0]['key'], node['value'][0]['value']
-            )
+        )
     for value in node['value']:
         if value['type'] == 'node':
             new_path = path.copy()
@@ -135,7 +137,7 @@ def get_plain_node_rows(node, path=[]):
                 path=get_path(path, value['key']),
                 old_value=get_output_plain_format(last_value),
                 new_value=get_output_plain_format(value['value'])
-                )
+            )
 
         elif value['diff'] == 'added':
             node_rows.append(
@@ -148,7 +150,7 @@ def get_plain_node_rows(node, path=[]):
             node_rows.append(
                 "Property '{path}' was removed".format(
                     path=get_path(path, value['key'])
-                    )
+                )
             )
         last_key, last_value = value['key'], value['value']
 

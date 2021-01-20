@@ -62,4 +62,4 @@ def test_json_diff_formater_empty_diff():
     ))
     assert result == (
         test_content['test_json_diff_formater_empty_diff']['expect']
-        )
+    )

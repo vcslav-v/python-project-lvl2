@@ -43,7 +43,7 @@ def test_get_diff_flat_json(flat_first_json, flat_second_json):
         )
     result['leafs'] = (
         test_content['test_get_diff_flat_json']['expect']['leafs']
-        )
+    )
     assert result == test_content['test_get_diff_flat_json']['expect']
 
 
@@ -54,7 +54,7 @@ def test_get_diff_flat_yaml(flat_first_yaml, flat_second_yaml):
     for leaf in result['leafs']:
         assert leaf in (
             test_content['test_get_diff_flat_yaml']['expect']['leafs']
-            )
+        )
     result['leafs'] = (
         test_content['test_get_diff_flat_yaml']['expect']['leafs']
     )
@@ -84,7 +84,7 @@ def test_get_diff_tree_yaml(tree_first_yaml, tree_second_yaml):
 def test_generate_diff_stylish(tree_first_json, tree_second_json):
     result = evaluator.generate_diff(
         tree_first_json, tree_second_json, 'stylish'
-        )
+    )
     expect = set(test_content['test_generate_diff_stylish']['expect'])
     result = result.split('\n')
     result = set(map(lambda line: line.strip(), result))
@@ -94,7 +94,7 @@ def test_generate_diff_stylish(tree_first_json, tree_second_json):
 def test_generate_diff_plain(tree_first_json, tree_second_json):
     result = evaluator.generate_diff(
         tree_first_json, tree_second_json, 'plain'
-        )
+    )
     expect = set(test_content['test_generate_diff_plain']['expect'])
     result = result.split('\n')
     result = set(map(lambda line: line.strip(), result))
@@ -104,7 +104,7 @@ def test_generate_diff_plain(tree_first_json, tree_second_json):
 def test_generate_diff_json(tree_first_json, tree_second_json):
     result = evaluator.generate_diff(
         tree_first_json, tree_second_json, 'json'
-        )
+    )
     result = json.loads(result)
     compare_node(result, test_content['test_generate_diff_json']['expect'])
 
@@ -112,8 +112,8 @@ def test_generate_diff_json(tree_first_json, tree_second_json):
 def test_generate_diff_json_yaml(tree_first_yaml, tree_second_yaml):
     result = evaluator.generate_diff(
         tree_first_yaml, tree_second_yaml, 'json'
-        )
+    )
     result = json.loads(result)
     compare_node(
         result, test_content['test_generate_diff_json_yaml']['expect']
-        )
+    )
