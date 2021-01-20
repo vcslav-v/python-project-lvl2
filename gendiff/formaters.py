@@ -8,7 +8,7 @@ def get_dict_format_stylish(value_dict, offset):
     rows = ['{']
     spaces = ' ' * offset
     for key in value_dict.keys():
-        rows.append('{spaces}  {key}: {value}'.format(
+        rows.append('{spaces}   {key}: {value}'.format(
                     spaces=spaces,
                     key=key,
                     value=get_output_format_stylish(value_dict[key], offset+4)
