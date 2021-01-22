@@ -5,7 +5,7 @@ import os
 import yaml
 
 JSON = ('.json')
-YAML = ('.yaml', 'yml')
+YAML = ('.yaml', '.yml')
 EXTENSION_NOT_SUITABLE = 'File "{path}" is not json or yaml file'
 
 
