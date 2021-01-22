@@ -27,16 +27,16 @@ def generate_diff(
     return diff
 
 
-def sort_diff(diff):
-    diff['value'] = sorted(diff['value'], key=lambda value: value['key'])
+def sort_diff(value):
+    value = sorted(value, key=lambda value: value['key'])
 
-    for i in range(len(diff['value']) - 1):
-        if diff['value'][i]['key'] == diff['value'][i + 1]['key']:
-            if diff['value'][i]['diff'] == 'added':
-                diff['value'][i], diff['value'][i + 1] = (
-                    diff['value'][i + 1], diff['value'][i]
+    for i in range(len(value) - 1):
+        if value[i]['key'] == value[i + 1]['key']:
+            if value[i]['diff'] == 'added':
+                value[i], value[i + 1] = (
+                    value[i + 1], value[i]
                 )
-    return diff
+    return value
 
 
 def get_leaf(key, value, diff_status):
@@ -59,13 +59,9 @@ def get_diff(
 
     """
     diff_status = cfg['diff_status']
-    diff = {
-        'key': node_key,
-        'value': [],
-        'type': 'node',
-        'diff': diff_status['no_change']
-    }
     all_keys = start_data.keys() | end_data.keys()
+    value = []
+
     for key in all_keys:
         start_value_exist = False
         end_value_exist = False
@@ -79,31 +75,37 @@ def get_diff(
 
         if start_value_exist and not end_value_exist:
             #  the key with the node was added
-            diff['value'].append(get_leaf(
+            value.append(get_leaf(
                 key, start_value, diff_status['removed']
             ))
         elif end_value_exist and not start_value_exist:
             #  the key with the node was removed
-            diff['value'].append(get_leaf(
+            value.append(get_leaf(
                 key, end_value, diff_status['added']
             ))
         elif start_value_exist and end_value_exist:
             if isinstance(start_value, dict) and isinstance(end_value, dict):
                 #  there are children in both nodes
-                diff['value'].append(
+                value.append(
                     get_diff(start_value, end_value, node_key=key)
                 )
             elif start_value == end_value:
-                diff['value'].append(
+                value.append(
                     get_leaf(key, start_value, diff_status['no_change'])
                 )
             elif start_value != end_value:
-                diff['value'].append(
+                value.append(
                     get_leaf(key, start_value, diff_status['removed'])
                 )
-                diff['value'].append(
+                value.append(
                     get_leaf(key, end_value, diff_status['added'])
                 )
 
-    diff = sort_diff(diff)
+    value = sort_diff(value)
+    diff = {
+        'key': node_key,
+        'value': value,
+        'type': 'node',
+        'diff': diff_status['no_change']
+    }
     return diff
