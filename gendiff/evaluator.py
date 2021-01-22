@@ -1,12 +1,14 @@
 """Differences evaluator."""
-from gendiff import file_parser, formaters
 import pathlib
+
+from gendiff import file_parser, formaters
+from gendiff.config import cfg
 
 
 def generate_diff(
     first_file_path: pathlib.Path,
     second_file_path: pathlib.Path,
-    format_output_file: str = 'stylish'
+    format_output_file: str = cfg['output_format']['stylish']
 ) -> str:
     """Generate diffirences of two files.
 
@@ -18,11 +20,11 @@ def generate_diff(
     first_file_data = file_parser.get_data(first_file_path)
     second_file_data = file_parser.get_data(second_file_path)
     diff = get_diff(first_file_data, second_file_data)
-    if format_output_file == 'stylish':
+    if format_output_file == cfg['output_format']['stylish']:
         return(formaters.stylish(diff))
-    elif format_output_file == 'plain':
+    elif format_output_file == cfg['output_format']['plain']:
         return formaters.plain(diff)
-    elif format_output_file == 'json':
+    elif format_output_file == cfg['output_format']['json']:
         return formaters.json_diff_formater(diff)
 
 
@@ -45,7 +47,7 @@ def get_leaf(key, value, diff_status):
 def get_diff(
     start_data: dict = None,
     end_data: dict = None,
-    node_key: str = 'root'
+    node_key: str = cfg['diff_format']['root']
 ) -> dict:
     """Generate differences data.
 
@@ -54,19 +56,15 @@ def get_diff(
         end_data: formated dict with data
 
     Returns:
-        formated data with key "diff": add/remove/no change
+        formated data with key "diff": add/remove/no_change
 
     """
-    diff_status = {
-        'added': 'added',
-        'removed': 'removed',
-        'no change': 'no change',
-    }
+    diff_status = cfg['diff_status']
     diff = {
         'key': node_key,
         'value': [],
         'type': 'node',
-        'diff': diff_status['no change']
+        'diff': diff_status['no_change']
     }
     all_keys = set(start_data.keys()).union(set(end_data.keys()))
     for key in all_keys:
@@ -101,7 +99,7 @@ def get_diff(
 
         if start_value == end_value:
             diff['value'].append(
-                get_leaf(key, start_value, diff_status['no change'])
+                get_leaf(key, start_value, diff_status['no_change'])
             )
         elif start_value != end_value:
             diff['value'].append(

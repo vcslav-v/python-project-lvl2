@@ -1,0 +1,43 @@
+[output_format]
+stylish = 'stylish'
+plain = 'plain'
+json = 'json'
+
+[diff_format]
+root = 'root'
+
+[diff_status]
+added = 'added'
+removed = 'removed'
+no_change = 'no change'
+
+[message]
+extension_not_suitable = 'File "{path}" is not json or yaml file'
+description = 'Generate diff'
+help_string = 'set format of output'
+
+[file_formats]
+json = ['.json']
+yaml = ['.yaml', 'yml']
+
+[format.stylish]
+start_offset = 1
+add_offset = 4
+
+[format.stylish.sign]
+added = '+'
+removed = '-'
+no_change = ' '
+
+[format.plain]
+added_msg = "Property '{path}' was added with value: {value}"
+removed_msg = "Property '{path}' was removed"
+updated_msg = "Property '{path}' was updated. From {old_value} to {new_value}"
+path_separator = '.'
+
+[format.plain.value_format]
+false = 'false'
+true = 'true'
+none = 'null'
+string = "'{value}'"
+complex_value = '[complex value]'

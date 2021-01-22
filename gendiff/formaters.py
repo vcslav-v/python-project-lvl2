@@ -1,7 +1,16 @@
 """Formaters."""
 import json
 
+from gendiff.config import cfg
+
 # stylish
+SIGN = {
+    cfg['diff_status']['added']: cfg['format']['stylish']['sign']['added'],
+    cfg['diff_status']['removed']: cfg['format']['stylish']['sign']['removed'],
+    cfg['diff_status']['no_change']: (
+        cfg['format']['stylish']['sign']['no_change']
+    ),
+}
 
 
 def get_dict_format_stylish(value_dict, offset):
@@ -12,7 +21,8 @@ def get_dict_format_stylish(value_dict, offset):
             spaces=spaces,
             key=key,
             value=get_output_format_stylish(
-                value_dict[key], offset + 4
+                value_dict[key],
+                offset + cfg['format']['stylish']['add_offset']
             )
         )
         )
@@ -34,17 +44,16 @@ def get_output_format_stylish(value, offset):
     return new_value
 
 
-def get_stylish_node_rows(node, offset=1, force_sign=None):
+def get_stylish_node_rows(
+    node,
+    offset=cfg['format']['stylish']['start_offset'],
+    force_sign=None
+):
     node_rows = []
     spaces = ' ' * offset
 
-    sighs = {
-        'added': '+',
-        'removed': '-',
-        'no change': ' ',
-    }
     for value in node['value']:
-        sign = sighs[value['diff']]
+        sign = SIGN[value['diff']]
 
         if value['type'] == 'leaf':
             node_rows.append(
@@ -52,7 +61,10 @@ def get_stylish_node_rows(node, offset=1, force_sign=None):
                     spaces=spaces,
                     sign=sign,
                     key=value['key'],
-                    value=get_output_format_stylish(value['value'], offset + 4)
+                    value=get_output_format_stylish(
+                        value['value'],
+                        offset + cfg['format']['stylish']['add_offset']
+                    )
                 )
             )
         elif value['type'] == 'node':
@@ -63,9 +75,14 @@ def get_stylish_node_rows(node, offset=1, force_sign=None):
                     node=value['key']
                 ) + '{'
             )
-            node_rows.extend(get_stylish_node_rows(value, offset + 4))
+            node_rows.extend(
+                get_stylish_node_rows(
+                    value, offset + cfg['format']['stylish']['add_offset']
+                )
+            )
 
-    node_rows.append(spaces[1:] + '}')
+    end_spases = ' ' * (offset - cfg['format']['stylish']['start_offset'])
+    node_rows.append(end_spases + '}')
     return node_rows
 
 
@@ -88,19 +105,22 @@ def stylish(diff: dict) -> str:
 
 
 # plain
+PLAIN_VALUE_FORMAT = {
+    False: cfg['format']['plain']['value_format']['false'],
+    True: cfg['format']['plain']['value_format']['true'],
+    None: cfg['format']['plain']['value_format']['none']
+}
 
 
 def get_output_plain_format(value):
-    if value is False:
-        new_value = 'false'
-    elif value is True:
-        new_value = 'true'
-    elif value is None:
-        new_value = 'null'
+    if type(value) in (dict, list):
+        new_value = cfg['format']['plain']['value_format']['complex_value']
+    elif value in PLAIN_VALUE_FORMAT:
+        new_value = PLAIN_VALUE_FORMAT[value]
     elif type(value) is str:
-        new_value = "'{value}'".format(value=value)
-    elif type(value) in (dict, list):
-        new_value = "[complex value]"
+        new_value = cfg['format']['plain']['value_format']['string'].format(
+            value=value
+        )
     else:
         new_value = value
     return new_value
@@ -109,11 +129,14 @@ def get_output_plain_format(value):
 def get_path(path, key):
     if not path:
         return key
-    return '{path}.{key}'.format(path='.'.join(path), key=key)
+    return '{path}{sep}{key}'.format(
+        path='.'.join(path),
+        sep=cfg['format']['plain']['path_separator'],
+        key=key)
 
 
 def get_updated_plain_values(property_diff, property_value, other_value):
-    if property_diff == 'added':
+    if property_diff == cfg['diff_status']['added']:
         old_value, new_value = other_value, property_value
     else:
         old_value, new_value = property_value, other_value
@@ -133,24 +156,22 @@ def get_plain_node_rows(node, path=[]):
             node_rows.extend(get_plain_node_rows(value, new_path))
 
         elif value['key'] == last_key and node_rows:
-            node_rows[-1] = (
-                "Property '{path}' was updated. "
-                "From {old_value} to {new_value}").format(
+            node_rows[-1] = cfg['format']['plain']['updated_msg'].format(
                 path=get_path(path, value['key']),
                 old_value=get_output_plain_format(last_value),
                 new_value=get_output_plain_format(value['value'])
             )
 
-        elif value['diff'] == 'added':
+        elif value['diff'] == cfg['diff_status']['added']:
             node_rows.append(
-                "Property '{path}' was added with value: {value}".format(
+                cfg['format']['plain']['added_msg'].format(
                     path=get_path(path, value['key']),
                     value=get_output_plain_format(value['value'])
                 )
             )
-        elif value['diff'] == 'removed':
+        elif value['diff'] == cfg['diff_status']['removed']:
             node_rows.append(
-                "Property '{path}' was removed".format(
+                cfg['format']['plain']['removed_msg'].format(
                     path=get_path(path, value['key'])
                 )
             )

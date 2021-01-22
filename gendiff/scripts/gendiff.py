@@ -4,18 +4,23 @@
 import argparse
 import pathlib
 from gendiff import evaluator
+from gendiff.config import cfg
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Generate diff')
+    parser = argparse.ArgumentParser(description=cfg['message']['description'])
     parser.add_argument('first_file', type=pathlib.Path)
     parser.add_argument('second_file', type=pathlib.Path)
     parser.add_argument(
         '-f', '--format',
-        help='set format of output',
+        help=cfg['message']['help_string'],
         type=str,
-        default='stylish',
-        choices=['stylish', 'plain', 'json']
+        default=cfg['output_format']['stylish'],
+        choices=[
+            cfg['output_format']['stylish'],
+            cfg['output_format']['plain'],
+            cfg['output_format']['json']
+        ]
     )
     args = parser.parse_args()
 

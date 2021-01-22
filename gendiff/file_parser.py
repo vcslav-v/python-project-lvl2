@@ -4,6 +4,8 @@ import pathlib
 
 import yaml
 
+from gendiff.config import cfg
+
 
 def get_data(file_path: pathlib.Path) -> dict:
     """Make dict from json or yaml.
@@ -16,13 +18,15 @@ def get_data(file_path: pathlib.Path) -> dict:
     """
     file_extension = get_extension(file_path).lower()
     with open(file_path, 'r') as file_data:
-        if file_extension == '.json':
+        if file_extension in cfg['file_formats']['json']:
             data = json.load(file_data)
-        elif file_extension in ('.yaml', '.yml'):
+        elif file_extension in cfg['file_formats']['yaml']:
             data = yaml.load(file_data, Loader=yaml.FullLoader)
         else:
             raise ValueError(
-                'File "{path}" is not json or yaml file'.format(path=file_path)
+                cfg['message']['extension_not_suitable'].format(
+                    path=file_path
+                )
             )
     return data
 
