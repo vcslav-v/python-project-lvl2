@@ -50,7 +50,7 @@ def get_output_format_stylish(value, offset):
         new_value = 'true'
     elif value is None:
         new_value = 'null'
-    elif type(value) == dict:
+    elif isinstance(value, dict):
         new_value = get_dict_format_stylish(value, offset)
     else:
         new_value = value
@@ -126,11 +126,11 @@ PLAIN_VALUE_FORMAT = {
 
 
 def get_output_plain_format(value):
-    if type(value) in (dict, list):
+    if isinstance(value, (dict, list)):
         new_value = cfg['format']['plain']['value_format']['complex_value']
     elif value in PLAIN_VALUE_FORMAT:
         new_value = PLAIN_VALUE_FORMAT[value]
-    elif type(value) is str:
+    elif isinstance(value, str):
         new_value = cfg['format']['plain']['value_format']['string'].format(
             value=value
         )
