@@ -3,6 +3,19 @@ import json
 
 from gendiff.config import cfg
 
+
+def get_output_string(diff_data: dict, output_format: str) -> str:
+
+    if output_format == cfg['output_format']['stylish']:
+        diff = stylish(diff_data)
+    elif output_format == cfg['output_format']['plain']:
+        diff = plain(diff_data)
+    elif output_format == cfg['output_format']['json']:
+        diff = json_diff_formater(diff_data)
+
+    return diff
+
+
 # stylish
 SIGN = {
     cfg['diff_status']['added']: cfg['format']['stylish']['sign']['added'],

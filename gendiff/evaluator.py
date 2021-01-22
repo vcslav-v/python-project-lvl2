@@ -8,7 +8,7 @@ from gendiff.config import cfg
 def generate_diff(
     first_file_path: pathlib.Path,
     second_file_path: pathlib.Path,
-    format_output_file: str = cfg['output_format']['stylish']
+    output_format: str = cfg['output_format']['stylish']
 ) -> str:
     """Generate diffirences of two files.
 
@@ -19,13 +19,11 @@ def generate_diff(
     """
     first_file_data = file_parser.get_data(first_file_path)
     second_file_data = file_parser.get_data(second_file_path)
+
     diff_data = get_diff(first_file_data, second_file_data)
-    if format_output_file == cfg['output_format']['stylish']:
-        diff = formaters.stylish(diff_data)
-    elif format_output_file == cfg['output_format']['plain']:
-        diff = formaters.plain(diff_data)
-    elif format_output_file == cfg['output_format']['json']:
-        diff = formaters.json_diff_formater(diff_data)
+
+    diff = formaters.get_output_string(diff_data, output_format)
+
     return diff
 
 
