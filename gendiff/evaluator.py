@@ -65,48 +65,45 @@ def get_diff(
         'type': 'node',
         'diff': diff_status['no_change']
     }
-    all_keys = set(start_data.keys()).union(set(end_data.keys()))
+    all_keys = start_data.keys() | end_data.keys()
     for key in all_keys:
+        start_value_exist = False
+        end_value_exist = False
 
-        try:
+        if key in start_data:
             start_value = start_data[key]
-        except KeyError:
-            #  the key with the node was added
+            start_value_exist = True
+        if key in end_data:
             end_value = end_data[key]
-            diff['value'].append(get_leaf(
-                key, end_value, diff_status['added']
-            )
-            )
-            continue
+            end_value_exist = True
 
-        try:
-            end_value = end_data[key]
-        except KeyError:
-            #  the key with the node was removed
+        if start_value_exist and not end_value_exist:
+            #  the key with the node was added
             diff['value'].append(get_leaf(
                 key, start_value, diff_status['removed']
-            )
-            )
-            continue
-
-        if type(start_value) is dict and type(end_value) is dict:
-            #  there are children in both nodes
-            diff['value'].append(
-                get_diff(start_value, end_value, node_key=key)
-            )
-            continue
-
-        if start_value == end_value:
-            diff['value'].append(
-                get_leaf(key, start_value, diff_status['no_change'])
-            )
-        elif start_value != end_value:
-            diff['value'].append(
-                get_leaf(key, start_value, diff_status['removed'])
-            )
-            diff['value'].append(
-                get_leaf(key, end_value, diff_status['added'])
-            )
+            ))
+        elif end_value_exist and not start_value_exist:
+            #  the key with the node was removed
+            diff['value'].append(get_leaf(
+                key, end_value, diff_status['added']
+            ))
+        elif start_value_exist and end_value_exist:
+            if isinstance(start_value, dict) and isinstance(end_value, dict):
+                #  there are children in both nodes
+                diff['value'].append(
+                    get_diff(start_value, end_value, node_key=key)
+                )
+            elif start_value == end_value:
+                diff['value'].append(
+                    get_leaf(key, start_value, diff_status['no_change'])
+                )
+            elif start_value != end_value:
+                diff['value'].append(
+                    get_leaf(key, start_value, diff_status['removed'])
+                )
+                diff['value'].append(
+                    get_leaf(key, end_value, diff_status['added'])
+                )
 
     diff = sort_diff(diff)
     return diff
