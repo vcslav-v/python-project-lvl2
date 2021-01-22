@@ -2,7 +2,7 @@ lint:
 	poetry run flake8 gendiff
 
 package-install:
-	python3 -m pip install --user dist/*.whl
+	pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ vaclav_gendiff_training_project
 
 install:
 	poetry install
