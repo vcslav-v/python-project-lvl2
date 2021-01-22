@@ -1,13 +1,15 @@
+"""Parser json/yaml file data."""
 import json
 import os
-import pathlib
 
 import yaml
 
-from gendiff.config import cfg
+JSON = ('.json')
+YAML = ('.yaml', 'yml')
+EXTENSION_NOT_SUITABLE = 'File "{path}" is not json or yaml file'
 
 
-def get_data(file_path: pathlib.Path) -> dict:
+def get_data(file_path: str) -> dict:
     """Make dict from json or yaml.
 
     Parameters:
@@ -18,20 +20,20 @@ def get_data(file_path: pathlib.Path) -> dict:
     """
     file_extension = get_extension(file_path).lower()
     with open(file_path, 'r') as file_data:
-        if file_extension in cfg['file_formats']['json']:
+        if file_extension in JSON:
             data = json.load(file_data)
-        elif file_extension in cfg['file_formats']['yaml']:
+        elif file_extension in YAML:
             data = yaml.load(file_data, Loader=yaml.FullLoader)
         else:
             raise ValueError(
-                cfg['message']['extension_not_suitable'].format(
+                EXTENSION_NOT_SUITABLE.format(
                     path=file_path
                 )
             )
     return data
 
 
-def get_extension(file_path: pathlib.Path) -> str:
+def get_extension(file_path: str) -> str:
     """Parse file extention from file path.
 
     Parameters:

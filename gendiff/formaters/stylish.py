@@ -1,20 +1,26 @@
-"""Formaters."""
-from gendiff.config import cfg
+"""Stylish formater."""
+from typing import Any, List
 
+STATUS_ADDED = 'added'
+STATUS_REMOVED = 'removed'
+STATUS_UPDATED = 'updated'
+STATUS_NO_CHANGE = 'no change'
+STATUS_NODE = 'node'
+
+START_OFFSET = 1
+ADD_OFFSET = 4
 
 SIGN = {
-    cfg['diff_status']['added']: cfg['format']['stylish']['sign']['added'],
-    cfg['diff_status']['removed']: cfg['format']['stylish']['sign']['removed'],
-    cfg['diff_status']['no_change']: (
-        cfg['format']['stylish']['sign']['no_change']
-    ),
-    cfg['diff_status']['node']: cfg['format']['stylish']['sign']['node']
+    STATUS_ADDED: '+',
+    STATUS_REMOVED: '-',
+    STATUS_NO_CHANGE: ' ',
+    STATUS_NODE: ' '
 }
 
-STYLISH_VALUE_FORMAT = {
-    False: cfg['format']['stylish']['value_format']['false'],
-    True: cfg['format']['stylish']['value_format']['true'],
-    None: cfg['format']['stylish']['value_format']['none']
+VALUE_FORMAT = {
+    False: 'false',
+    True: 'true',
+    None: 'null'
 }
 
 
@@ -31,52 +37,55 @@ def stylish(diff: dict) -> str:
     """
 
     output = ['{']
-    output.extend(get_stylish_node_rows(diff))
+    output.extend(get_node_rows(diff))
     output[-1] = '}'
     return '\n'.join(output)
 
 
-def get_stylish_node_rows(
-    node,
-    offset=cfg['format']['stylish']['start_offset'],
-    force_sign=None
-):
+def get_node_rows(
+    node: dict,
+    offset: int = START_OFFSET,
+    force_sign: str = ''
+) -> List[str]:
+    """Formats the diff to a list of strings stylish."""
+
     node_rows = []
     spaces = ' ' * offset
 
-    for value in node['value']:
-        if value['diff'] in SIGN:
-            sign = SIGN[value['diff']]
+    for value in node['values']:
+        key, status = value['key'], value['diff']
+        if status in SIGN:
+            sign = SIGN[status]
 
-        if value['diff'] == cfg['diff_status']['node']:
+        if status == STATUS_NODE:
             node_rows.append(
                 '{spaces} {sign} {node}: '.format(
                     sign=sign,
                     spaces=spaces,
-                    node=value['key']
+                    node=key
                 ) + '{'
             )
             node_rows.extend(
-                get_stylish_node_rows(
-                    value, offset + cfg['format']['stylish']['add_offset']
+                get_node_rows(
+                    value, offset + ADD_OFFSET
                 )
             )
-        elif value['diff'] == cfg['diff_status']['updated']:
+        elif status == STATUS_UPDATED:
             node_rows.append(
                 get_leaf(
                     spaces,
-                    cfg['format']['stylish']['sign']['removed'],
-                    value['key'],
-                    value['old_value'],
+                    SIGN[STATUS_REMOVED],
+                    key,
+                    value['old_values'],
                     offset
                 )
             )
             node_rows.append(
                 get_leaf(
                     spaces,
-                    cfg['format']['stylish']['sign']['added'],
-                    value['key'],
-                    value['new_value'],
+                    SIGN[STATUS_ADDED],
+                    key,
+                    value['new_values'],
                     offset
                 )
             )
@@ -85,52 +94,61 @@ def get_stylish_node_rows(
                 get_leaf(
                     spaces,
                     sign,
-                    value['key'],
-                    value['value'],
+                    key,
+                    value['values'],
                     offset
                 )
             )
 
-    end_spases = ' ' * (offset - cfg['format']['stylish']['start_offset'])
+    end_spases = ' ' * (offset - START_OFFSET)
     node_rows.append(end_spases + '}')
     return node_rows
 
 
-def get_dict_format_stylish(value_dict, offset):
-    rows = ['{']
-    spaces = ' ' * offset
-    for key in value_dict.keys():
-        rows.append('{spaces}   {key}: {value}'.format(
-            spaces=spaces,
-            key=key,
-            value=get_output_format_stylish(
-                value_dict[key],
-                offset + cfg['format']['stylish']['add_offset']
-            )
-        )
-        )
-    rows.append(spaces[1:] + '}')
-    return '\n'.join(rows)
-
-
-def get_output_format_stylish(value, offset):
-    if isinstance(value, (dict)):
-        new_value = get_dict_format_stylish(value, offset)
-    elif value in STYLISH_VALUE_FORMAT:
-        new_value = STYLISH_VALUE_FORMAT[value]
+def get_output_format(value: Any, offset: int) -> str:
+    """Returns the values to the form stylish."""
+    if isinstance(value, dict):
+        new_value = get_dict_format(value, offset)
+    elif value in VALUE_FORMAT:
+        new_value = VALUE_FORMAT[value]
     else:
         new_value = value
     return new_value
 
 
-def get_leaf(spaces, sign, key, value, offset):
+def get_dict_format(value: dict, offset: int) -> str:
+    """To handle values of type dictionary."""
+    rows = ['{']
+    spaces = ' ' * offset
+    for key in value.keys():
+        rows.append('{spaces}   {key}: {value}'.format(
+            spaces=spaces,
+            key=key,
+            value=get_output_format(
+                value[key],
+                offset + ADD_OFFSET
+            )
+        ))
+    end_spases = ' ' * (offset - START_OFFSET)
+    rows.append(end_spases + '}')
+    return '\n'.join(rows)
+
+
+def get_leaf(
+    spaces: str,
+    sign: str,
+    key: str,
+    value: Any,
+    offset: int
+) -> str:
+    """Formats the sheet into a line of stylish."""
     leaf = '{spaces} {sign} {key}: {value}'.format(
                     spaces=spaces,
                     sign=sign,
                     key=key,
-                    value=get_output_format_stylish(
+                    value=get_output_format(
                         value,
-                        offset + cfg['format']['stylish']['add_offset']
+                        offset + ADD_OFFSET
                     )
                 )
     return leaf

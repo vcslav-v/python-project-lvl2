@@ -2,34 +2,49 @@
 """Generator differences run script."""
 
 import argparse
-import pathlib
 from gendiff import evaluator
-from gendiff.config import cfg
+from typing import Tuple
+
+DESCRIPTION = 'Generate diff'
+HELP_STRING = 'set format of output'
+STYLISH_FORMAT = 'stylish'
+PLAIN_FORMAT = 'plain'
+JSON_FORMAT = 'json'
 
 
 def main():
-    parser = argparse.ArgumentParser(description=cfg['message']['description'])
-    parser.add_argument('first_file', type=pathlib.Path)
-    parser.add_argument('second_file', type=pathlib.Path)
-    parser.add_argument(
-        '-f', '--format',
-        help=cfg['message']['help_string'],
-        type=str,
-        default=cfg['output_format']['stylish'],
-        choices=[
-            cfg['output_format']['stylish'],
-            cfg['output_format']['plain'],
-            cfg['output_format']['json']
-        ]
-    )
-    args = parser.parse_args()
-
+    first_file, second_file, output_format = get_arguments()
     try:
         print(evaluator.generate_diff(
-            args.first_file, args.second_file, args.format)
+            first_file, second_file, output_format)
         )
     except Exception as e:
         print(e)
+
+
+def get_arguments() -> Tuple[str, str, str]:
+    """Take the command-line arguments.
+    first_file, second_file, output_format
+
+    Returns:
+        (first_file, second_file, output_format)
+    """
+    parser = argparse.ArgumentParser(description=DESCRIPTION)
+    parser.add_argument('first_file', type=str)
+    parser.add_argument('second_file', type=str)
+    parser.add_argument(
+        '-f', '--format',
+        help=HELP_STRING,
+        type=str,
+        default=STYLISH_FORMAT,
+        choices=[
+            STYLISH_FORMAT,
+            PLAIN_FORMAT,
+            JSON_FORMAT
+        ]
+    )
+    args = parser.parse_args()
+    return (str(args.first_file), str(args.second_file), str(args.format))
 
 
 if __name__ == "__main__":

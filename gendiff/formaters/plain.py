@@ -1,12 +1,24 @@
 """Formaters."""
-from gendiff.config import cfg
+from typing import Any, List
 
+STATUS_ADDED = 'added'
+STATUS_REMOVED = 'removed'
+STATUS_UPDATED = 'updated'
+STATUS_NO_CHANGE = 'no change'
+STATUS_NODE = 'node'
 
-PLAIN_VALUE_FORMAT = {
-    False: cfg['format']['plain']['value_format']['false'],
-    True: cfg['format']['plain']['value_format']['true'],
-    None: cfg['format']['plain']['value_format']['none']
+ADDED_MSG = "Property '{path}' was added with value: {value}"
+REMOVED_MSG = "Property '{path}' was removed"
+UPDATED_MSG = "Property '{path}' was updated. From {old_value} to {new_value}"
+PATH_SEPARATOR = '.'
+
+VALUE_FORMAT = {
+    False: 'false',
+    True: 'true',
+    None: 'null'
 }
+COMPLEX_VALUE_FORMAT = '[complex value]'
+STRING_FORMAT = "'{value}'"
 
 
 def plain(diff: dict) -> str:
@@ -20,70 +32,65 @@ def plain(diff: dict) -> str:
         formated string
     """
 
-    output = get_plain_node_rows(diff)
+    output = get_rows(diff)
     return '\n'.join(output)
 
 
-def get_plain_node_rows(node, path=[]):
+def get_rows(node: dict, path: List[str] = []) -> List[str]:
+    """Formats the diff to a list of strings plain."""
     node_rows = []
 
-    for value in node['value']:
-        if value['diff'] == cfg['diff_status']['node']:
-            new_path = [*path, value['key']]
-            node_rows.extend(get_plain_node_rows(value, new_path))
+    for value in node['values']:
+        status, key = value['diff'], value['key']
+        if status == STATUS_NODE:
+            new_path = [*path, key]
+            node_rows.extend(get_rows(value, new_path))
 
-        elif value['diff'] == cfg['diff_status']['updated']:
+        elif status == STATUS_UPDATED:
             node_rows.append(
-                cfg['format']['plain']['updated_msg'].format(
+                UPDATED_MSG.format(
                     path=get_path(path, value['key']),
-                    old_value=get_output_plain_format(value['old_value']),
-                    new_value=get_output_plain_format(value['new_value'])
+                    old_value=get_output_format(value['old_values']),
+                    new_value=get_output_format(value['new_values'])
                 )
             )
 
-        elif value['diff'] == cfg['diff_status']['added']:
+        elif status == STATUS_ADDED:
             node_rows.append(
-                cfg['format']['plain']['added_msg'].format(
-                    path=get_path(path, value['key']),
-                    value=get_output_plain_format(value['value'])
+                ADDED_MSG.format(
+                    path=get_path(path, key),
+                    value=get_output_format(value['values'])
                 )
             )
-        elif value['diff'] == cfg['diff_status']['removed']:
+
+        elif status == STATUS_REMOVED:
             node_rows.append(
-                cfg['format']['plain']['removed_msg'].format(
-                    path=get_path(path, value['key'])
+                REMOVED_MSG.format(
+                    path=get_path(path, key)
                 )
             )
 
     return node_rows
 
 
-def get_output_plain_format(value):
+def get_output_format(value: Any) -> str:
+    """Returns the values to the form plain."""
     if isinstance(value, (dict, list)):
-        new_value = cfg['format']['plain']['value_format']['complex_value']
-    elif value in PLAIN_VALUE_FORMAT:
-        new_value = PLAIN_VALUE_FORMAT[value]
+        new_value = COMPLEX_VALUE_FORMAT
+    elif value in VALUE_FORMAT:
+        new_value = VALUE_FORMAT[value]
     elif isinstance(value, str):
-        new_value = cfg['format']['plain']['value_format']['string'].format(
-            value=value
-        )
+        new_value = STRING_FORMAT.format(value=value)
     else:
         new_value = value
     return new_value
 
 
-def get_path(path, key):
+def get_path(path: List[str], key: str) -> str:
+    """Make path string."""
     if not path:
         return key
     return '{path}{sep}{key}'.format(
         path='.'.join(path),
-        sep=cfg['format']['plain']['path_separator'],
+        sep=PATH_SEPARATOR,
         key=key)
-
-
-def get_updated_plain_values(property_diff, property_value, other_value):
-    if property_diff == cfg['diff_status']['added']:
-        old_value, new_value = other_value, property_value
-    else:
-        old_value, new_value = property_value, other_value
-    return old_value, new_value

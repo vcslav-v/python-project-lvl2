@@ -1,14 +1,26 @@
 """Differences evaluator."""
-import pathlib
-
 from gendiff import file_parser, formater
-from gendiff.config import cfg
+from typing import List, Any
+
+STYLISH_FORMAT = 'stylish'
+PLAIN_FORMAT = 'plain'
+JSON_FORMAT = 'json'
+
+STATUS_ADDED = 'added'
+STATUS_REMOVED = 'removed'
+STATUS_UPDATED = 'updated'
+STATUS_NO_CHANGE = 'no change'
+STATUS_NODE = 'node'
+
+STATUS_INDEFINED = 'indefined'
+
+ROOT_KEY = 'root'
 
 
 def generate_diff(
-    first_file_path: pathlib.Path,
-    second_file_path: pathlib.Path,
-    output_format: str = cfg['output_format']['stylish']
+    first_file_path: str,
+    second_file_path: str,
+    output_format: str = STYLISH_FORMAT
 ) -> str:
     """Generate diffirences of two files.
 
@@ -27,29 +39,10 @@ def generate_diff(
     return diff
 
 
-def sort_diff(value):
-    value = sorted(value, key=lambda value: value['key'])
-    return value
-
-
-def get_leaf(key, value, diff_status):
-    if diff_status == cfg['diff_status']['updated']:
-        old_value, new_value = value
-        leaf = {
-            'key': key,
-            'old_value': old_value,
-            'new_value': new_value,
-            'diff': diff_status
-        }
-    else:
-        leaf = {'key': key, 'value': value, 'diff': diff_status}
-    return leaf
-
-
 def get_diff(
     start_data: dict,
     end_data: dict,
-    node_key: str = cfg['diff_format']['root']
+    node_key: str = ROOT_KEY
 ) -> dict:
     """Generate differences data.
 
@@ -61,52 +54,104 @@ def get_diff(
         formated data with key "diff": add/remove/no_change
 
     """
-    diff_status = cfg['diff_status']
     all_keys = start_data.keys() | end_data.keys()
-    value = []
+    values = []
 
     for key in all_keys:
-        start_value_exist = False
-        end_value_exist = False
+        start_value_exist = is_key_exist(start_data, key)
+        end_value_exist = is_key_exist(end_data, key)
+        status = get_status(
+            start_value_exist,
+            end_value_exist
+        )
 
-        if key in start_data:
+        if start_value_exist:
             start_value = start_data[key]
-            start_value_exist = True
-        if key in end_data:
+        if end_value_exist:
             end_value = end_data[key]
-            end_value_exist = True
 
-        if start_value_exist and not end_value_exist:
-            #  the key with the node was added
-            value.append(get_leaf(
-                key, start_value, diff_status['removed']
+        if status == STATUS_REMOVED:
+            values.append(get_leaf(
+                key, start_value, STATUS_REMOVED
             ))
-        elif end_value_exist and not start_value_exist:
-            #  the key with the node was removed
-            value.append(get_leaf(
-                key, end_value, diff_status['added']
+        elif status == STATUS_ADDED:
+            values.append(get_leaf(
+                key, end_value, STATUS_ADDED
             ))
-        elif start_value_exist and end_value_exist:
-            if isinstance(start_value, dict) and isinstance(end_value, dict):
-                #  there are children in both nodes
-                value.append(
+        elif status == STATUS_INDEFINED:
+            status = get_refinded_status(start_value, end_value)
+
+            if status == STATUS_NODE:
+                values.append(
                     get_diff(start_value, end_value, node_key=key)
                 )
-            elif start_value == end_value:
-                value.append(
-                    get_leaf(key, start_value, diff_status['no_change'])
+            elif status == STATUS_NO_CHANGE:
+                values.append(
+                    get_leaf(key, start_value, STATUS_NO_CHANGE)
                 )
-            elif start_value != end_value:
-                value.append(
+            elif status == STATUS_UPDATED:
+                values.append(
                     get_leaf(
-                        key, (start_value, end_value), diff_status['updated']
+                        key, (start_value, end_value), STATUS_UPDATED
                     )
                 )
 
-    value = sort_diff(value)
+    values = sort_diff(values)
     diff = {
         'key': node_key,
-        'value': value,
-        'diff': diff_status['node']
+        'values': values,
+        'diff': STATUS_NODE
     }
     return diff
+
+
+def get_leaf(key: Any, values: Any, diff_status: str) -> dict:
+    """Create a new formatted leaf.
+    If status is upadted can get two value old and new in tuple.
+    """
+    if diff_status == STATUS_UPDATED:
+        old_values, new_values = values
+        leaf = {
+            'key': key,
+            'old_values': old_values,
+            'new_values': new_values,
+            'diff': diff_status
+        }
+    else:
+        leaf = {'key': key, 'values': values, 'diff': diff_status}
+    return leaf
+
+
+def is_key_exist(value: dict, key: Any) -> bool:
+    """Does the key exist in the dictionary."""
+    return key in value
+
+
+def get_status(start_value_exist: bool, end_value_exist: bool) -> str:
+    """Determines the status of changes.
+    If it cannot be determined, returns indefined
+    """
+    if start_value_exist and not end_value_exist:
+        status = STATUS_REMOVED
+    elif end_value_exist and not start_value_exist:
+        status = STATUS_ADDED
+    else:
+        status = STATUS_INDEFINED
+    return status
+
+
+def get_refinded_status(start_value: dict, end_value: dict) -> str:
+    """Refind the status by values, if the previous status was indefined."""
+    if isinstance(start_value, dict) and isinstance(end_value, dict):
+        status = STATUS_NODE
+    elif start_value == end_value:
+        status = STATUS_NO_CHANGE
+    elif start_value != end_value:
+        status = STATUS_UPDATED
+    return status
+
+
+def sort_diff(values: List[dict]) -> List[dict]:
+    """Sort the dictionaries in the list by the key " key."""
+    values = sorted(values, key=lambda value: value['key'])
+    return values

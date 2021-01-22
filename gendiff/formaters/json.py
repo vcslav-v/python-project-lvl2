@@ -1,4 +1,4 @@
-"""Formaters."""
+"""Json formater."""
 import json
 
 
