@@ -9,35 +9,20 @@ PLAIN_VALUE_FORMAT = {
 }
 
 
-def get_output_plain_format(value):
-    if isinstance(value, (dict, list)):
-        new_value = cfg['format']['plain']['value_format']['complex_value']
-    elif value in PLAIN_VALUE_FORMAT:
-        new_value = PLAIN_VALUE_FORMAT[value]
-    elif isinstance(value, str):
-        new_value = cfg['format']['plain']['value_format']['string'].format(
-            value=value
-        )
-    else:
-        new_value = value
-    return new_value
+def plain(diff: dict) -> str:
+    """Format diff data dict.
+    Property 'path.property' was added with value: 'value'
+    Property 'path.property' was removed
+    Property 'path.property' was updated. From 'value 1' to 'value 2'
+    Parameters:
+        diff: differences data representation
+    Returns:
+        formated string
+    """
 
-
-def get_path(path, key):
-    if not path:
-        return key
-    return '{path}{sep}{key}'.format(
-        path='.'.join(path),
-        sep=cfg['format']['plain']['path_separator'],
-        key=key)
-
-
-def get_updated_plain_values(property_diff, property_value, other_value):
-    if property_diff == cfg['diff_status']['added']:
-        old_value, new_value = other_value, property_value
-    else:
-        old_value, new_value = property_value, other_value
-    return old_value, new_value
+    output = []
+    output.extend(get_plain_node_rows(diff))
+    return '\n'.join(output)
 
 
 def get_plain_node_rows(node, path=[]):
@@ -75,17 +60,32 @@ def get_plain_node_rows(node, path=[]):
     return node_rows
 
 
-def plain(diff: dict) -> str:
-    """Format diff data dict.
-    Property 'path.property' was added with value: 'value'
-    Property 'path.property' was removed
-    Property 'path.property' was updated. From 'value 1' to 'value 2'
-    Parameters:
-        diff: differences data representation
-    Returns:
-        formated string
-    """
+def get_output_plain_format(value):
+    if isinstance(value, (dict, list)):
+        new_value = cfg['format']['plain']['value_format']['complex_value']
+    elif value in PLAIN_VALUE_FORMAT:
+        new_value = PLAIN_VALUE_FORMAT[value]
+    elif isinstance(value, str):
+        new_value = cfg['format']['plain']['value_format']['string'].format(
+            value=value
+        )
+    else:
+        new_value = value
+    return new_value
 
-    output = []
-    output.extend(get_plain_node_rows(diff))
-    return '\n'.join(output)
+
+def get_path(path, key):
+    if not path:
+        return key
+    return '{path}{sep}{key}'.format(
+        path='.'.join(path),
+        sep=cfg['format']['plain']['path_separator'],
+        key=key)
+
+
+def get_updated_plain_values(property_diff, property_value, other_value):
+    if property_diff == cfg['diff_status']['added']:
+        old_value, new_value = other_value, property_value
+    else:
+        old_value, new_value = property_value, other_value
+    return old_value, new_value

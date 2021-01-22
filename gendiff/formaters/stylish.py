@@ -18,44 +18,22 @@ STYLISH_VALUE_FORMAT = {
 }
 
 
-def get_dict_format_stylish(value_dict, offset):
-    rows = ['{']
-    spaces = ' ' * offset
-    for key in value_dict.keys():
-        rows.append('{spaces}   {key}: {value}'.format(
-            spaces=spaces,
-            key=key,
-            value=get_output_format_stylish(
-                value_dict[key],
-                offset + cfg['format']['stylish']['add_offset']
-            )
-        )
-        )
-    rows.append(spaces[1:] + '}')
-    return '\n'.join(rows)
+def stylish(diff: dict) -> str:
+    """Format diff data dict.
+     - deleted key: value
+     + added key: value
+       unchanged key: value
 
+    Parameters:
+        diff: differences data representation
+    Returns:
+        formated string
+    """
 
-def get_output_format_stylish(value, offset):
-    if isinstance(value, (dict)):
-        new_value = get_dict_format_stylish(value, offset)
-    elif value in STYLISH_VALUE_FORMAT:
-        new_value = STYLISH_VALUE_FORMAT[value]
-    else:
-        new_value = value
-    return new_value
-
-
-def get_leaf(spaces, sign, key, value, offset):
-    leaf = '{spaces} {sign} {key}: {value}'.format(
-                    spaces=spaces,
-                    sign=sign,
-                    key=key,
-                    value=get_output_format_stylish(
-                        value,
-                        offset + cfg['format']['stylish']['add_offset']
-                    )
-                )
-    return leaf
+    output = ['{']
+    output.extend(get_stylish_node_rows(diff))
+    output[-1] = '}'
+    return '\n'.join(output)
 
 
 def get_stylish_node_rows(
@@ -118,19 +96,41 @@ def get_stylish_node_rows(
     return node_rows
 
 
-def stylish(diff: dict) -> str:
-    """Format diff data dict.
-     - deleted key: value
-     + added key: value
-       unchanged key: value
+def get_dict_format_stylish(value_dict, offset):
+    rows = ['{']
+    spaces = ' ' * offset
+    for key in value_dict.keys():
+        rows.append('{spaces}   {key}: {value}'.format(
+            spaces=spaces,
+            key=key,
+            value=get_output_format_stylish(
+                value_dict[key],
+                offset + cfg['format']['stylish']['add_offset']
+            )
+        )
+        )
+    rows.append(spaces[1:] + '}')
+    return '\n'.join(rows)
 
-    Parameters:
-        diff: differences data representation
-    Returns:
-        formated string
-    """
 
-    output = ['{']
-    output.extend(get_stylish_node_rows(diff))
-    output[-1] = '}'
-    return '\n'.join(output)
+def get_output_format_stylish(value, offset):
+    if isinstance(value, (dict)):
+        new_value = get_dict_format_stylish(value, offset)
+    elif value in STYLISH_VALUE_FORMAT:
+        new_value = STYLISH_VALUE_FORMAT[value]
+    else:
+        new_value = value
+    return new_value
+
+
+def get_leaf(spaces, sign, key, value, offset):
+    leaf = '{spaces} {sign} {key}: {value}'.format(
+                    spaces=spaces,
+                    sign=sign,
+                    key=key,
+                    value=get_output_format_stylish(
+                        value,
+                        offset + cfg['format']['stylish']['add_offset']
+                    )
+                )
+    return leaf
