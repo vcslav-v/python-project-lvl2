@@ -7,43 +7,26 @@ import pytest
 from gendiff import file_parser
 
 
-def test_get_data_json(flat_first_json):
-    result = file_parser.get_data(flat_first_json)
-    expect = {
-        'host': 'hexlet.io',
-        'timeout': 50,
-        'proxy': '123.234.53.22',
-        'follow': False
-    }
+@pytest.mark.parametrize('data_file, load_func', [
+    ('tree_first_json', json.load),
+    ('tree_first_yaml', lambda x: yaml.load(x, Loader=yaml.FullLoader))
+])
+def test_get_data(data_file, load_func, request):
+    data_file = request.getfixturevalue(data_file)
+    result = file_parser.get_data(data_file)
+    with open(data_file) as open_file:
+        expect = load_func(open_file)
     assert (result == expect)
 
 
-def test_get_data_json_wrong_json(wrong_json):
-    with pytest.raises(json.JSONDecodeError):
-        file_parser.get_data(wrong_json)
-
-
-def test_get_data_json_fake_json(fake_json):
-    with pytest.raises(FileNotFoundError):
-        file_parser.get_data(fake_json)
-
-
-def test_get_data_yaml(flat_first_yaml):
-    result = file_parser.get_data(flat_first_yaml)
-    expect = {
-        'test': 'some_string',
-        'num': 43,
-        'ip_address': '192.168.1.1',
-        'boolean': False
-    }
-    assert (result == expect)
-
-
-def test_get_data_json_wrong_yaml(wrong_yaml):
-    with pytest.raises(yaml.scanner.ScannerError):
-        file_parser.get_data(wrong_yaml)
-
-
-def test_get_data_json_fake_yaml(fake_yaml):
-    with pytest.raises(FileNotFoundError):
-        file_parser.get_data(fake_yaml)
+@pytest.mark.parametrize('problem_file, error_type', [
+    ('wrong_json', json.JSONDecodeError),
+    ('wrong_yaml', yaml.scanner.ScannerError),
+    ('fake_json', FileNotFoundError),
+    ('fake_yaml', FileNotFoundError),
+    ('toml_format', ValueError)
+])
+def test_get_data_wrong(problem_file, error_type, request):
+    problem_file = request.getfixturevalue(problem_file)
+    with pytest.raises(error_type):
+        file_parser.get_data(problem_file)
