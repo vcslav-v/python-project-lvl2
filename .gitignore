@@ -1,6 +1,6 @@
 .venv
 .vscode
-.pytest_cache
+*_cache
 __pycache__
 .python-version
 .coverage

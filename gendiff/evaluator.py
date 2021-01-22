@@ -19,13 +19,14 @@ def generate_diff(
     """
     first_file_data = file_parser.get_data(first_file_path)
     second_file_data = file_parser.get_data(second_file_path)
-    diff = get_diff(first_file_data, second_file_data)
+    diff_data = get_diff(first_file_data, second_file_data)
     if format_output_file == cfg['output_format']['stylish']:
-        return(formaters.stylish(diff))
+        diff = formaters.stylish(diff_data)
     elif format_output_file == cfg['output_format']['plain']:
-        return formaters.plain(diff)
+        diff = formaters.plain(diff_data)
     elif format_output_file == cfg['output_format']['json']:
-        return formaters.json_diff_formater(diff)
+        diff = formaters.json_diff_formater(diff_data)
+    return diff
 
 
 def sort_diff(diff):
@@ -45,8 +46,8 @@ def get_leaf(key, value, diff_status):
 
 
 def get_diff(
-    start_data: dict = None,
-    end_data: dict = None,
+    start_data: dict,
+    end_data: dict,
     node_key: str = cfg['diff_format']['root']
 ) -> dict:
     """Generate differences data.

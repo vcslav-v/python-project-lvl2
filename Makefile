@@ -1,5 +1,6 @@
 lint:
 	poetry run flake8 gendiff
+	poetry run mypy gendiff
 
 package-install:
 	pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ vaclav_gendiff_training_project
