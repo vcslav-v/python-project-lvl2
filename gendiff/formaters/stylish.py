@@ -17,11 +17,9 @@ SIGN = {
     STATUS_NODE: ' '
 }
 
-VALUE_FORMAT = {
-    False: 'false',
-    True: 'true',
-    None: 'null'
-}
+FALSE_FORMAT = 'false'
+TRUE_FORMAT = 'true'
+NONE_FORMAT = 'none'
 
 
 def stylish(diff: dict) -> str:
@@ -109,8 +107,12 @@ def get_output_format(value: Any, offset: int) -> str:
     """Returns the values to the form stylish."""
     if isinstance(value, dict):
         new_value = get_dict_format(value, offset)
-    elif value in VALUE_FORMAT:
-        new_value = VALUE_FORMAT[value]
+    elif value is True:
+        new_value = TRUE_FORMAT
+    elif value is False:
+        new_value = FALSE_FORMAT
+    elif value is None:
+        new_value = NONE_FORMAT
     else:
         new_value = value
     return new_value

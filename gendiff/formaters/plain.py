@@ -12,11 +12,9 @@ REMOVED_MSG = "Property '{path}' was removed"
 UPDATED_MSG = "Property '{path}' was updated. From {old_value} to {new_value}"
 PATH_SEPARATOR = '.'
 
-VALUE_FORMAT = {
-    False: 'false',
-    True: 'true',
-    None: 'null'
-}
+FALSE_FORMAT = 'false'
+TRUE_FORMAT = 'true'
+NONE_FORMAT = 'none'
 COMPLEX_VALUE_FORMAT = '[complex value]'
 STRING_FORMAT = "'{value}'"
 
@@ -77,10 +75,14 @@ def get_output_format(value: Any) -> str:
     """Returns the values to the form plain."""
     if isinstance(value, (dict, list)):
         new_value = COMPLEX_VALUE_FORMAT
-    elif value in VALUE_FORMAT:
-        new_value = VALUE_FORMAT[value]
     elif isinstance(value, str):
         new_value = STRING_FORMAT.format(value=value)
+    elif value is True:
+        new_value = TRUE_FORMAT
+    elif value is False:
+        new_value = FALSE_FORMAT
+    elif value is None:
+        new_value = NONE_FORMAT
     else:
         new_value = value
     return new_value
