@@ -1,2 +1,6 @@
 """Differences evaluator."""
-from .evaluator import generate_diff  # noqa: F401
+from gendiff.evaluator import generate_diff
+
+__all__ = (
+    'generate_diff',
+)
