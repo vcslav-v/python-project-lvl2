@@ -19,7 +19,7 @@ SIGN = {
 
 FALSE_FORMAT = 'false'
 TRUE_FORMAT = 'true'
-NONE_FORMAT = 'none'
+NONE_FORMAT = 'null'
 
 
 def stylish(diff: dict) -> str:

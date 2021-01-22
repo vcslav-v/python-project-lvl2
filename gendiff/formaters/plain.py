@@ -14,7 +14,7 @@ PATH_SEPARATOR = '.'
 
 FALSE_FORMAT = 'false'
 TRUE_FORMAT = 'true'
-NONE_FORMAT = 'none'
+NONE_FORMAT = 'null'
 COMPLEX_VALUE_FORMAT = '[complex value]'
 STRING_FORMAT = "'{value}'"
 
