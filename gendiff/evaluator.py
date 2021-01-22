@@ -40,7 +40,7 @@ def sort_diff(value):
 
 
 def get_leaf(key, value, diff_status):
-    return {'key': key, 'value': value, 'type': 'leaf', 'diff': diff_status}
+    return {'key': key, 'value': value, 'diff': diff_status}
 
 
 def get_diff(
@@ -105,7 +105,6 @@ def get_diff(
     diff = {
         'key': node_key,
         'value': value,
-        'type': 'node',
-        'diff': diff_status['no_change']
+        'diff': diff_status['node']
     }
     return diff

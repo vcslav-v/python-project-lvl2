@@ -23,6 +23,13 @@ SIGN = {
     cfg['diff_status']['no_change']: (
         cfg['format']['stylish']['sign']['no_change']
     ),
+    cfg['diff_status']['node']: cfg['format']['stylish']['sign']['node']
+}
+
+STYLISH_VALUE_FORMAT = {
+    False: cfg['format']['stylish']['value_format']['false'],
+    True: cfg['format']['stylish']['value_format']['true'],
+    None: cfg['format']['stylish']['value_format']['none']
 }
 
 
@@ -44,14 +51,10 @@ def get_dict_format_stylish(value_dict, offset):
 
 
 def get_output_format_stylish(value, offset):
-    if value is False:
-        new_value = 'false'
-    elif value is True:
-        new_value = 'true'
-    elif value is None:
-        new_value = 'null'
-    elif isinstance(value, dict):
+    if isinstance(value, (dict)):
         new_value = get_dict_format_stylish(value, offset)
+    elif value in STYLISH_VALUE_FORMAT:
+        new_value = STYLISH_VALUE_FORMAT[value]
     else:
         new_value = value
     return new_value
@@ -68,19 +71,7 @@ def get_stylish_node_rows(
     for value in node['value']:
         sign = SIGN[value['diff']]
 
-        if value['type'] == 'leaf':
-            node_rows.append(
-                '{spaces} {sign} {key}: {value}'.format(
-                    spaces=spaces,
-                    sign=sign,
-                    key=value['key'],
-                    value=get_output_format_stylish(
-                        value['value'],
-                        offset + cfg['format']['stylish']['add_offset']
-                    )
-                )
-            )
-        elif value['type'] == 'node':
+        if value['diff'] == cfg['diff_status']['node']:
             node_rows.append(
                 '{spaces} {sign} {node}: '.format(
                     sign=sign,
@@ -91,6 +82,18 @@ def get_stylish_node_rows(
             node_rows.extend(
                 get_stylish_node_rows(
                     value, offset + cfg['format']['stylish']['add_offset']
+                )
+            )
+        else:
+            node_rows.append(
+                '{spaces} {sign} {key}: {value}'.format(
+                    spaces=spaces,
+                    sign=sign,
+                    key=value['key'],
+                    value=get_output_format_stylish(
+                        value['value'],
+                        offset + cfg['format']['stylish']['add_offset']
+                    )
                 )
             )
 
@@ -163,7 +166,7 @@ def get_plain_node_rows(node, path=[]):
             node['value'][0]['key'], node['value'][0]['value']
         )
     for value in node['value']:
-        if value['type'] == 'node':
+        if value['diff'] == cfg['diff_status']['node']:
             new_path = path.copy()
             new_path.append(value['key'])
             node_rows.extend(get_plain_node_rows(value, new_path))

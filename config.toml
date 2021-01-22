@@ -10,6 +10,7 @@ root = 'root'
 added = 'added'
 removed = 'removed'
 no_change = 'no change'
+node = 'node'
 
 [message]
 extension_not_suitable = 'File "{path}" is not json or yaml file'
@@ -28,6 +29,12 @@ add_offset = 4
 added = '+'
 removed = '-'
 no_change = ' '
+node = ' '
+
+[format.stylish.value_format]
+false = 'false'
+true = 'true'
+none = 'null'
 
 [format.plain]
 added_msg = "Property '{path}' was added with value: {value}"
