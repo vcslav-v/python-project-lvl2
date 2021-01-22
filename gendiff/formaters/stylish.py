@@ -145,12 +145,12 @@ def get_leaf(
 ) -> str:
     """Formats the sheet into a line of stylish."""
     leaf = '{spaces} {sign} {key}: {value}'.format(
-                    spaces=spaces,
-                    sign=sign,
-                    key=key,
-                    value=get_output_format(
-                        value,
-                        offset + ADD_OFFSET
-                    )
-                )
+        spaces=spaces,
+        sign=sign,
+        key=key,
+        value=get_output_format(
+            value,
+            offset + ADD_OFFSET
+        )
+    )
     return leaf
