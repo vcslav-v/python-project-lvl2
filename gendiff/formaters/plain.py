@@ -20,8 +20,7 @@ def plain(diff: dict) -> str:
         formated string
     """
 
-    output = []
-    output.extend(get_plain_node_rows(diff))
+    output = get_plain_node_rows(diff)
     return '\n'.join(output)
 
 
@@ -30,8 +29,7 @@ def get_plain_node_rows(node, path=[]):
 
     for value in node['value']:
         if value['diff'] == cfg['diff_status']['node']:
-            new_path = path.copy()
-            new_path.append(value['key'])
+            new_path = [*path, value['key']]
             node_rows.extend(get_plain_node_rows(value, new_path))
 
         elif value['diff'] == cfg['diff_status']['updated']:
