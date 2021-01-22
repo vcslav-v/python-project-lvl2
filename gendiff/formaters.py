@@ -22,15 +22,16 @@ def get_dict_format_stylish(value_dict, offset):
 
 def get_output_format_stylish(value, offset):
     if value is False:
-        return 'false'
+        new_value = 'false'
     elif value is True:
-        return 'true'
+        new_value = 'true'
     elif value is None:
-        return 'null'
+        new_value = 'null'
     elif type(value) == dict:
-        return get_dict_format_stylish(value, offset)
+        new_value = get_dict_format_stylish(value, offset)
     else:
-        return value
+        new_value = value
+    return new_value
 
 
 def get_stylish_node_rows(node, offset=1, force_sign=None):
@@ -91,17 +92,18 @@ def stylish(diff: dict) -> str:
 
 def get_output_plain_format(value):
     if value is False:
-        return 'false'
+        new_value = 'false'
     elif value is True:
-        return 'true'
+        new_value = 'true'
     elif value is None:
-        return 'null'
+        new_value = 'null'
     elif type(value) is str:
-        return "'{value}'".format(value=value)
+        new_value = "'{value}'".format(value=value)
     elif type(value) in (dict, list):
-        return "[complex value]"
+        new_value = "[complex value]"
     else:
-        return value
+        new_value = value
+    return new_value
 
 
 def get_path(path, key):

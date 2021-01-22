@@ -1,21 +1,20 @@
 """Tests for file parser"""
 import json
 import yaml
-import os
 
 import pytest
 
 from gendiff import file_parser
 
-with open(
-    os.path.join('tests', 'fixtures', 'file_parser_content.json'), 'r'
-) as test_content_file:
-    test_content = json.load(test_content_file)
-
 
 def test_get_data_json(flat_first_json):
     result = file_parser.get_data(flat_first_json)
-    expect = test_content['test_get_data_json']['expect']
+    expect = {
+        'host': 'hexlet.io',
+        'timeout': 50,
+        'proxy': '123.234.53.22',
+        'follow': False
+    }
     assert (result == expect)
 
 
@@ -31,7 +30,12 @@ def test_get_data_json_fake_json(fake_json):
 
 def test_get_data_yaml(flat_first_yaml):
     result = file_parser.get_data(flat_first_yaml)
-    expect = test_content['test_get_data_yaml']['expect']
+    expect = {
+        'test': 'some_string',
+        'num': 43,
+        'ip_address': '192.168.1.1',
+        'boolean': False
+    }
     assert (result == expect)
 
 

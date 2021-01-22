@@ -4,19 +4,17 @@ import os
 
 from gendiff import evaluator, file_parser
 
-with open(
-    os.path.join('tests', 'fixtures', 'evaluator_content.json'), 'r'
-) as test_content_file:
-    test_content = json.load(test_content_file)
+expect_files_path = os.path.join('tests', 'expects')
 
 
 def test_generate_diff_stylish(tree_first_json, tree_second_json):
     result = evaluator.generate_diff(
         tree_first_json, tree_second_json, 'stylish'
     )
-    expect = set(test_content['test_generate_diff_stylish']['expect'])
-    result = result.split('\n')
-    result = set(map(lambda line: line.strip(), result))
+    with open(
+        os.path.join(expect_files_path, 'generate_diff_stylish.txt'), 'r'
+    ) as expect_file:
+        expect = ''.join(expect_file.readlines())
     assert result == expect
 
 
@@ -24,9 +22,10 @@ def test_generate_diff_plain(tree_first_json, tree_second_json):
     result = evaluator.generate_diff(
         tree_first_json, tree_second_json, 'plain'
     )
-    expect = set(test_content['test_generate_diff_plain']['expect'])
-    result = result.split('\n')
-    result = set(map(lambda line: line.strip(), result))
+    with open(
+        os.path.join(expect_files_path, 'generate_diff_plain.txt'), 'r'
+    ) as expect_file:
+        expect = ''.join(expect_file.readlines())
     assert result == expect
 
 
