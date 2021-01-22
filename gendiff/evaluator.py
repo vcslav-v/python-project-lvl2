@@ -29,18 +29,21 @@ def generate_diff(
 
 def sort_diff(value):
     value = sorted(value, key=lambda value: value['key'])
-
-    for i in range(len(value) - 1):
-        if value[i]['key'] == value[i + 1]['key']:
-            if value[i]['diff'] == 'added':
-                value[i], value[i + 1] = (
-                    value[i + 1], value[i]
-                )
     return value
 
 
 def get_leaf(key, value, diff_status):
-    return {'key': key, 'value': value, 'diff': diff_status}
+    if diff_status == cfg['diff_status']['updated']:
+        old_value, new_value = value
+        leaf = {
+            'key': key,
+            'old_value': old_value,
+            'new_value': new_value,
+            'diff': diff_status
+        }
+    else:
+        leaf = {'key': key, 'value': value, 'diff': diff_status}
+    return leaf
 
 
 def get_diff(
@@ -95,10 +98,9 @@ def get_diff(
                 )
             elif start_value != end_value:
                 value.append(
-                    get_leaf(key, start_value, diff_status['removed'])
-                )
-                value.append(
-                    get_leaf(key, end_value, diff_status['added'])
+                    get_leaf(
+                        key, (start_value, end_value), diff_status['updated']
+                    )
                 )
 
     value = sort_diff(value)

@@ -60,6 +60,19 @@ def get_output_format_stylish(value, offset):
     return new_value
 
 
+def get_leaf(spaces, sign, key, value, offset):
+    leaf = '{spaces} {sign} {key}: {value}'.format(
+                    spaces=spaces,
+                    sign=sign,
+                    key=key,
+                    value=get_output_format_stylish(
+                        value,
+                        offset + cfg['format']['stylish']['add_offset']
+                    )
+                )
+    return leaf
+
+
 def get_stylish_node_rows(
     node,
     offset=cfg['format']['stylish']['start_offset'],
@@ -69,7 +82,8 @@ def get_stylish_node_rows(
     spaces = ' ' * offset
 
     for value in node['value']:
-        sign = SIGN[value['diff']]
+        if value['diff'] in SIGN:
+            sign = SIGN[value['diff']]
 
         if value['diff'] == cfg['diff_status']['node']:
             node_rows.append(
@@ -84,16 +98,33 @@ def get_stylish_node_rows(
                     value, offset + cfg['format']['stylish']['add_offset']
                 )
             )
+        elif value['diff'] == cfg['diff_status']['updated']:
+            node_rows.append(
+                get_leaf(
+                    spaces,
+                    cfg['format']['stylish']['sign']['removed'],
+                    value['key'],
+                    value['old_value'],
+                    offset
+                )
+            )
+            node_rows.append(
+                get_leaf(
+                    spaces,
+                    cfg['format']['stylish']['sign']['added'],
+                    value['key'],
+                    value['new_value'],
+                    offset
+                )
+            )
         else:
             node_rows.append(
-                '{spaces} {sign} {key}: {value}'.format(
-                    spaces=spaces,
-                    sign=sign,
-                    key=value['key'],
-                    value=get_output_format_stylish(
-                        value['value'],
-                        offset + cfg['format']['stylish']['add_offset']
-                    )
+                get_leaf(
+                    spaces,
+                    sign,
+                    value['key'],
+                    value['value'],
+                    offset
                 )
             )
 
@@ -161,21 +192,20 @@ def get_updated_plain_values(property_diff, property_value, other_value):
 
 def get_plain_node_rows(node, path=[]):
     node_rows = []
-    if node['value'] != []:
-        last_key, last_value = (
-            node['value'][0]['key'], node['value'][0]['value']
-        )
+
     for value in node['value']:
         if value['diff'] == cfg['diff_status']['node']:
             new_path = path.copy()
             new_path.append(value['key'])
             node_rows.extend(get_plain_node_rows(value, new_path))
 
-        elif value['key'] == last_key and node_rows:
-            node_rows[-1] = cfg['format']['plain']['updated_msg'].format(
-                path=get_path(path, value['key']),
-                old_value=get_output_plain_format(last_value),
-                new_value=get_output_plain_format(value['value'])
+        elif value['diff'] == cfg['diff_status']['updated']:
+            node_rows.append(
+                cfg['format']['plain']['updated_msg'].format(
+                    path=get_path(path, value['key']),
+                    old_value=get_output_plain_format(value['old_value']),
+                    new_value=get_output_plain_format(value['new_value'])
+                )
             )
 
         elif value['diff'] == cfg['diff_status']['added']:
@@ -191,7 +221,6 @@ def get_plain_node_rows(node, path=[]):
                     path=get_path(path, value['key'])
                 )
             )
-        last_key, last_value = value['key'], value['value']
 
     return node_rows
 

@@ -9,6 +9,7 @@ root = 'root'
 [diff_status]
 added = 'added'
 removed = 'removed'
+updated = 'update'
 no_change = 'no change'
 node = 'node'
 
