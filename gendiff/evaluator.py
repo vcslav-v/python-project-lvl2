@@ -1,7 +1,7 @@
 """Differences evaluator."""
 import pathlib
 
-from gendiff import file_parser, formaters
+from gendiff import file_parser, formater
 from gendiff.config import cfg
 
 
@@ -22,7 +22,7 @@ def generate_diff(
 
     diff_data = get_diff(first_file_data, second_file_data)
 
-    diff = formaters.get_output_string(diff_data, output_format)
+    diff = formater.get_output_string(diff_data, output_format)
 
     return diff
 
