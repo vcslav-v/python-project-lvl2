@@ -24,7 +24,7 @@ def test_generate_diff_formats(
     with open(
         os.path.join(expect_files_path, expect_file), 'r'
     ) as expect_file:
-        expect = ''.join(expect_file.readlines())
+        expect = expect_file.read()
     assert result == expect
 
 
