@@ -61,36 +61,31 @@ def get_diff(
     for key in all_keys:
         start_value_exist = key in start_data
         end_value_exist = key in end_data
-        status = get_status(
-            start_value_exist,
-            end_value_exist
-        )
 
         if start_value_exist:
             start_value = start_data[key]
         if end_value_exist:
             end_value = end_data[key]
 
-        if status == STATUS_REMOVED:
+        if start_value_exist and not end_value_exist:
             values.append(get_leaf(
                 key, start_value, STATUS_REMOVED
             ))
-        elif status == STATUS_ADDED:
+        elif not start_value_exist and end_value_exist:
             values.append(get_leaf(
                 key, end_value, STATUS_ADDED
             ))
-        elif status == STATUS_INDEFINED:
-            status = get_refinded_status(start_value, end_value)
+        elif start_value_exist and end_value_exist:
 
-            if status == STATUS_NODE:
+            if isinstance(start_value, dict) and isinstance(end_value, dict):
                 values.append(
                     get_diff(start_value, end_value, node_key=key)
                 )
-            elif status == STATUS_NO_CHANGE:
+            elif start_value == end_value:
                 values.append(
                     get_leaf(key, start_value, STATUS_NO_CHANGE)
                 )
-            elif status == STATUS_UPDATED:
+            elif start_value != end_value:
                 values.append(
                     get_leaf(
                         key, (start_value, end_value), STATUS_UPDATED
@@ -121,30 +116,6 @@ def get_leaf(key: Any, values: Any, diff_status: str) -> dict:
     else:
         leaf = {'key': key, 'values': values, 'diff': diff_status}
     return leaf
-
-
-def get_status(start_value_exist: bool, end_value_exist: bool) -> str:
-    """Determines the status of changes.
-    If it cannot be determined, returns indefined
-    """
-    if start_value_exist and not end_value_exist:
-        status = STATUS_REMOVED
-    elif end_value_exist and not start_value_exist:
-        status = STATUS_ADDED
-    else:
-        status = STATUS_INDEFINED
-    return status
-
-
-def get_refinded_status(start_value: dict, end_value: dict) -> str:
-    """Refind the status by values, if the previous status was indefined."""
-    if isinstance(start_value, dict) and isinstance(end_value, dict):
-        status = STATUS_NODE
-    elif start_value == end_value:
-        status = STATUS_NO_CHANGE
-    elif start_value != end_value:
-        status = STATUS_UPDATED
-    return status
 
 
 def sort_diff(values: List[dict]) -> List[dict]:
