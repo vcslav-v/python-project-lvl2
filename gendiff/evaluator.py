@@ -1,7 +1,7 @@
 """Differences evaluator."""
 from gendiff import file_parser
 from gendiff.formaters import get_output_string
-from typing import List, Any
+from typing import Any
 
 STYLISH_FORMAT = 'stylish'
 PLAIN_FORMAT = 'plain'
@@ -92,7 +92,6 @@ def get_diff(
                     )
                 )
 
-    values = sort_diff(values)
     diff = {
         'key': node_key,
         'values': values,
@@ -116,9 +115,3 @@ def get_leaf(key: Any, values: Any, diff_status: str) -> dict:
     else:
         leaf = {'key': key, 'values': values, 'diff': diff_status}
     return leaf
-
-
-def sort_diff(values: List[dict]) -> List[dict]:
-    """Sort the dictionaries in the list by the key " key."""
-    values = sorted(values, key=lambda value: value['key'])
-    return values

@@ -38,6 +38,9 @@ def get_rows(node: dict, path: List[str] = []) -> List[str]:
     """Formats the diff to a list of strings plain."""
     node_rows = []
 
+    if node['values']:
+        node['values'] = sort_values(node['values'])
+
     for value in node['values']:
         status, key = value['diff'], value['key']
         if status == STATUS_NODE:
@@ -96,3 +99,9 @@ def get_path(path: List[str], key: str) -> str:
         path='.'.join(path),
         sep=PATH_SEPARATOR,
         key=key)
+
+
+def sort_values(values: List[dict]) -> List[dict]:
+    """Sort the dictionaries in the list by the key " key."""
+    values = sorted(values, key=lambda value: value['key'])
+    return values

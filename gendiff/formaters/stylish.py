@@ -49,6 +49,8 @@ def get_node_rows(
 
     node_rows = []
     spaces = ' ' * offset
+    if node['values']:
+        node['values'] = sort_values(node['values'])
 
     for value in node['values']:
         key, status = value['key'], value['diff']
@@ -154,3 +156,9 @@ def get_leaf(
         )
     )
     return leaf
+
+
+def sort_values(values: List[dict]) -> List[dict]:
+    """Sort the dictionaries in the list by the key " key."""
+    values = sorted(values, key=lambda value: value['key'])
+    return values
