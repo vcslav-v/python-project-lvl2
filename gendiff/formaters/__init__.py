@@ -1,9 +1,6 @@
-from .json import json_formater
-from .plain import plain
-from .stylish import stylish
+from gendiff.formaters.main import get_output_string
+
 
 __all__ = (
-    'stylish',
-    'plain',
-    'json_formater',
+    'get_output_string',
 )

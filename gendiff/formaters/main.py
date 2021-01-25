@@ -1,5 +1,7 @@
 """Formaters."""
-from gendiff.formaters import stylish, plain, json_formater
+from gendiff.formaters.stylish import stylish
+from gendiff.formaters.plain import plain
+from gendiff.formaters.json_formater import json_formater
 
 STYLISH_FORMAT = 'stylish'
 PLAIN_FORMAT = 'plain'

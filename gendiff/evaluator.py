@@ -1,5 +1,6 @@
 """Differences evaluator."""
-from gendiff import file_parser, formater
+from gendiff import file_parser
+from gendiff.formaters import get_output_string
 from typing import List, Any
 
 STYLISH_FORMAT = 'stylish'
@@ -34,7 +35,7 @@ def generate_diff(
 
     diff_data = get_diff(first_file_data, second_file_data)
 
-    diff = formater.get_output_string(diff_data, output_format)
+    diff = get_output_string(diff_data, output_format)
 
     return diff
 
