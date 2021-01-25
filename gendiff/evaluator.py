@@ -13,8 +13,6 @@ STATUS_UPDATED = 'updated'
 STATUS_NO_CHANGE = 'no change'
 STATUS_NODE = 'node'
 
-STATUS_INDEFINED = 'indefined'
-
 ROOT_KEY = 'root'
 
 
