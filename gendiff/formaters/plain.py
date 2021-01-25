@@ -43,14 +43,14 @@ def get_rows(node: dict, path: List[str] = []) -> List[str]:
 
     for value in node['values']:
         status, key = value['diff'], value['key']
+        new_path = [*path, key]
         if status == STATUS_NODE:
-            new_path = [*path, key]
             node_rows.extend(get_rows(value, new_path))
 
         elif status == STATUS_UPDATED:
             node_rows.append(
                 UPDATED_MSG.format(
-                    path=get_path(path, value['key']),
+                    path=PATH_SEPARATOR.join(new_path),
                     old_value=get_output_format(value['old_values']),
                     new_value=get_output_format(value['new_values'])
                 )
@@ -59,7 +59,7 @@ def get_rows(node: dict, path: List[str] = []) -> List[str]:
         elif status == STATUS_ADDED:
             node_rows.append(
                 ADDED_MSG.format(
-                    path=get_path(path, key),
+                    path=PATH_SEPARATOR.join(new_path),
                     value=get_output_format(value['values'])
                 )
             )
@@ -67,7 +67,7 @@ def get_rows(node: dict, path: List[str] = []) -> List[str]:
         elif status == STATUS_REMOVED:
             node_rows.append(
                 REMOVED_MSG.format(
-                    path=get_path(path, key)
+                    path=PATH_SEPARATOR.join(new_path)
                 )
             )
 
@@ -89,16 +89,6 @@ def get_output_format(value: Any) -> str:
     else:
         new_value = value
     return new_value
-
-
-def get_path(path: List[str], key: str) -> str:
-    """Make path string."""
-    if not path:
-        return key
-    return '{path}{sep}{key}'.format(
-        path='.'.join(path),
-        sep=PATH_SEPARATOR,
-        key=key)
 
 
 def sort_values(values: List[dict]) -> List[dict]:
