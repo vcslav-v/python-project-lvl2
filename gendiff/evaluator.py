@@ -59,8 +59,8 @@ def get_diff(
     values = []
 
     for key in all_keys:
-        start_value_exist = is_key_exist(start_data, key)
-        end_value_exist = is_key_exist(end_data, key)
+        start_value_exist = key in start_data
+        end_value_exist = key in end_data
         status = get_status(
             start_value_exist,
             end_value_exist
@@ -121,11 +121,6 @@ def get_leaf(key: Any, values: Any, diff_status: str) -> dict:
     else:
         leaf = {'key': key, 'values': values, 'diff': diff_status}
     return leaf
-
-
-def is_key_exist(value: dict, key: Any) -> bool:
-    """Does the key exist in the dictionary."""
-    return key in value
 
 
 def get_status(start_value_exist: bool, end_value_exist: bool) -> str:
