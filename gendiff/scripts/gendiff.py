@@ -2,14 +2,13 @@
 """Generator differences run script."""
 
 import argparse
-from gendiff import evaluator
 from typing import Tuple
+
+from gendiff import evaluator
+from gendiff.formaters import JSON_FORMAT, PLAIN_FORMAT, STYLISH_FORMAT
 
 DESCRIPTION = 'Generate diff'
 HELP_STRING = 'set format of output'
-STYLISH_FORMAT = 'stylish'
-PLAIN_FORMAT = 'plain'
-JSON_FORMAT = 'json'
 
 
 def main():
