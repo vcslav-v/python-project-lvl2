@@ -7,6 +7,8 @@ STYLISH_FORMAT = 'stylish'
 PLAIN_FORMAT = 'plain'
 JSON_FORMAT = 'json'
 
+FORMAT_NOT_SUITABLE = 'The format "{format}" is not supported'
+
 
 def get_output_string(diff_data: dict, output_format: str) -> str:
 
@@ -16,5 +18,11 @@ def get_output_string(diff_data: dict, output_format: str) -> str:
         diff = plain(diff_data)
     elif output_format == JSON_FORMAT:
         diff = json_formater(diff_data)
+    else:
+        raise ValueError(
+            FORMAT_NOT_SUITABLE.format(
+                format=output_format
+            )
+        )
 
     return diff
