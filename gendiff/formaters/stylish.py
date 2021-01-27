@@ -49,8 +49,7 @@ def get_node_rows(
 
     node_rows = []
     spaces = ' ' * offset
-    if node['values']:
-        node['values'] = sort_values(node['values'])
+    node['values'] = sort_values(node['values'])
 
     for value in node['values']:
         key, status = value['key'], value['diff']

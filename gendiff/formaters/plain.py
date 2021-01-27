@@ -39,7 +39,7 @@ def get_rows(node: dict, path: List[str] = []) -> List[str]:
     node_rows = []
 
     if node['values']:
-        node['values'] = sort_values(node['values'])
+    node['values'] = sort_values(node['values'])
 
     for value in node['values']:
         status, key = value['diff'], value['key']
