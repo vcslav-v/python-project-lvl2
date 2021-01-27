@@ -1,11 +1,8 @@
 """Stylish formater."""
 from typing import Any, List
 
-STATUS_ADDED = 'added'
-STATUS_REMOVED = 'removed'
-STATUS_UPDATED = 'updated'
-STATUS_NO_CHANGE = 'no change'
-STATUS_NODE = 'node'
+from gendiff import (STATUS_ADDED, STATUS_NO_CHANGE, STATUS_NODE,
+                     STATUS_REMOVED, STATUS_UPDATED)
 
 START_OFFSET = 1
 ADD_OFFSET = 4
