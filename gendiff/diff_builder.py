@@ -44,22 +44,20 @@ def get_diff(
             values.append(get_leaf(
                 key, end_value, STATUS_ADDED
             ))
-        elif start_value_exist and end_value_exist:
-
-            if isinstance(start_value, dict) and isinstance(end_value, dict):
-                values.append(
-                    get_diff(start_value, end_value, node_key=key)
+        elif isinstance(start_value, dict) and isinstance(end_value, dict):
+            values.append(
+                get_diff(start_value, end_value, node_key=key)
+            )
+        elif start_value == end_value:
+            values.append(
+                get_leaf(key, start_value, STATUS_NO_CHANGE)
+            )
+        elif start_value != end_value:
+            values.append(
+                get_leaf(
+                    key, (start_value, end_value), STATUS_UPDATED
                 )
-            elif start_value == end_value:
-                values.append(
-                    get_leaf(key, start_value, STATUS_NO_CHANGE)
-                )
-            elif start_value != end_value:
-                values.append(
-                    get_leaf(
-                        key, (start_value, end_value), STATUS_UPDATED
-                    )
-                )
+            )
 
     diff = {
         'key': node_key,
