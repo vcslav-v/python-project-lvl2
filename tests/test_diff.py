@@ -3,7 +3,7 @@ import json
 import os
 
 import pytest
-from gendiff import evaluator, file_parser
+from gendiff import evaluator, file_parser, diff_builder
 
 expect_files_path = os.path.join('tests', 'expects')
 
@@ -38,7 +38,7 @@ def test_generate_diff_json(start_file, end_file, request):
 
     data1 = file_parser.get_data(start_file)
     data2 = file_parser.get_data(end_file)
-    expect = evaluator.get_diff(data1, data2)
+    expect = diff_builder.get_diff(data1, data2)
     result = evaluator.generate_diff(
         start_file, end_file, 'json'
     )

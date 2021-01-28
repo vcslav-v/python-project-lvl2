@@ -1,11 +1,7 @@
 """Formaters."""
 from typing import Any, List
 
-STATUS_ADDED = 'added'
-STATUS_REMOVED = 'removed'
-STATUS_UPDATED = 'updated'
-STATUS_NO_CHANGE = 'no change'
-STATUS_NODE = 'node'
+from gendiff import STATUS_ADDED, STATUS_NODE, STATUS_REMOVED, STATUS_UPDATED
 
 ADDED_MSG = "Property '{path}' was added with value: {value}"
 REMOVED_MSG = "Property '{path}' was removed"
@@ -38,8 +34,7 @@ def get_rows(node: dict, path: List[str] = []) -> List[str]:
     """Formats the diff to a list of strings plain."""
     node_rows = []
 
-    if node['values']:
-        node['values'] = sort_values(node['values'])
+    node['values'] = sort_values(node['values'])
 
     for value in node['values']:
         status, key = value['diff'], value['key']

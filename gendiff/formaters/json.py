@@ -1,13 +1,13 @@
 """Json formater."""
-import json
+from json import dumps as json_dumbs
 
 
-def json_formater(diff: dict) -> str:
+def json(diff: dict) -> str:
     """Format diff data dict to json.
     Parameters:
         diff: differences data representation
     Returns:
         formated string
     """
-    output = json.dumps(diff)
+    output = json_dumbs(diff)
     return output
