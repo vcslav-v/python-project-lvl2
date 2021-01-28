@@ -55,11 +55,11 @@ def get_node_rows(
 
         if status == STATUS_NODE:
             node_rows.append(
-                '{spaces} {sign} {node}: '.format(
+                '{spaces} {sign} {node}: {{'.format(
                     sign=sign,
                     spaces=spaces,
                     node=key
-                ) + '{'
+                )
             )
             node_rows.extend(
                 get_node_rows(
